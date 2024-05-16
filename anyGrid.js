@@ -1,4 +1,4 @@
-export class DataGrid {
+export class AnyGrid {
   constructor(data, columns, initialItemsPerPage) {
     this.data = data;
     this.columns = columns;

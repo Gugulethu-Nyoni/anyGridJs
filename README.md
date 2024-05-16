@@ -85,7 +85,7 @@ const dataGrid = new anyGridJs(data, columns, 10);
 <div id="dataGrid"></div>
 
 <!-- Import your JS library -->
-<script src="./anyGridJs.js"></script>
+<script src="./anyGrid.js" type="module"></script>
 ```
 
 ## Contribute
@@ -96,4 +96,7 @@ anyGridJs is an open-source project. Contributions, issues, and feature requests
 
 anyGridJs is licensed under the MIT License.
 
+## Keywords
+
+Javasript datatables.
 
