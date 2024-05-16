@@ -75,7 +75,7 @@ const columns = [
 
 // create a new instance of anyGridJs
 
-const dataGrid = new anyGridJs(data, columns, 10);
+const dataGrid = new anyGrid(data, columns, 10);
 ```
 
 ## HTML 
