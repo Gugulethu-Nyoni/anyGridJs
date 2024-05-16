@@ -24,6 +24,14 @@ Get Started
 
 ## Usage Example
 
+## Installation 
+
+```bash
+
+npm install anyGridJs
+
+```
+
 ## Javascript (app.js)
 ``` javascript
 
