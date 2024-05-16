@@ -28,7 +28,7 @@ Get Started
 
 ```bash
 
-npm install anyGridJs
+npm install anygridjs
 
 ```
 
