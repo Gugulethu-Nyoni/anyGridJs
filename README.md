@@ -24,11 +24,64 @@ Get Started
 
 ## Usage Example
 
-## Installation 
+
+There are two ways to use this the anyGrid package.
+
+## Option A: Clone the GitHub repo:
+
+1. go to your terminal and run:
+
+```bash
+git clone https://github.com/thincmedia/anyGridJs.git
+
+````
+2. now you can use anygridjs this way in your html file
+
+```html
+
+<link rel="stylesheet" href="./anyGridJs/anyGrid.css">
+
+```
+
+```html
+
+<script type="module">
+
+  import { AnyGrid } from './anyGridJs/anyGrid.js';
+
+```
+
+
+## Option B: Via NPM
+
+### Installation 
+
+
+1. go to your terminal and run:
 
 ```bash
 
 npm install anygridjs
+
+````
+
+2. now you can use anygridjs this way in your html file
+
+```html
+
+<link rel="stylesheet" href="./node_modules/anygridjs/anyGrid.css">
+
+```
+
+```html
+
+<script type="module">
+
+  import { AnyGrid } from './node_modules/anygridjs/anyGrid.js';
+
+  // rest of js code can come here e.g. data object, column definition etc ( see below)
+
+  </script>
 
 ```
 
