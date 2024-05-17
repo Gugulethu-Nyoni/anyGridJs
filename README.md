@@ -1,4 +1,10 @@
 # anyGridJs
+
+
+![Any Grid Js Example](./images/anyGridJs_example.png)
+
+
+
 DataTables.js: Lightweight, feature-rich JS library for dynamic data tables. Paginated, sortable, searchable, column joining, action handles &amp; URL definition. Works with any JS framework or vanilla JS. Flexible, customizable, responsive &amp; performant. Open-source &amp; MIT licensed.
 
 ## Key Features
@@ -49,7 +55,7 @@ git clone https://github.com/thincmedia/anyGridJs.git
 
   import { AnyGrid } from './anyGridJs/anyGrid.js';
 
-  </script>
+</script>
 
 ```
 
@@ -83,7 +89,7 @@ npm install anygridjs
 
   // rest of js code (app.js) can come here e.g. data object, column definition etc ( see below)
 
-  </script>
+</script>
 
 ```
 
