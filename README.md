@@ -49,10 +49,12 @@ git clone https://github.com/thincmedia/anyGridJs.git
 
   import { AnyGrid } from './anyGridJs/anyGrid.js';
 
+  </script>
+
 ```
 
 
-## Option B: Via NPM
+## Option B: Via npm
 
 ### Installation 
 
@@ -79,14 +81,14 @@ npm install anygridjs
 
   import { AnyGrid } from './node_modules/anygridjs/anyGrid.js';
 
-  // rest of js code can come here e.g. data object, column definition etc ( see below)
+  // rest of js code (app.js) can come here e.g. data object, column definition etc ( see below)
 
   </script>
 
 ```
 
 ## Javascript (app.js)
-``` javascript
+```javascript
 
 // data object (JSON)
 
@@ -137,8 +139,6 @@ const dataGrid = new anyGrid(data, columns, 10);
 
 <div id="dataGrid"></div>
 
-<!-- Import your JS library -->
-<script src="./anyGrid.js" type="module"></script>
 ```
 
 ## Contribute
@@ -151,5 +151,6 @@ anyGridJs is licensed under the MIT License.
 
 ## Keywords
 
-Javasript datatables.
+Javascript datatables.
+
 
