@@ -1,10 +1,10 @@
-# anyGridJs
+# anyGridJS
 
 
 <img src="https://github.com/thincmedia/anyGridJs/blob/main/images/anyGridJs_Example.png" alt="anyGridJs Example">
 
 
-anyGrid: Lightweight, feature-rich JS library for dynamic data tables. Paginated, sortable, searchable, column joining, action handles &amp; URL definition. Works with any JS framework or vanilla JS. Flexible, customizable, responsive &amp; performant. Open-source &amp; MIT licensed.
+anyGridJS: Lightweight, feature-rich JS library for dynamic data tables. Paginated, sortable, searchable, column joining, action handles &amp; URL definition. Works with any JS framework or vanilla JS. Flexible, customizable, responsive &amp; performant. Open-source &amp; MIT licensed.
 
 ## Key Features
 
@@ -16,7 +16,7 @@ anyGrid: Lightweight, feature-rich JS library for dynamic data tables. Paginated
   - URL Definition: Define URLs for data linking and seamless navigation
   - Framework Agnostic: Works with any JavaScript framework (React, Angular, Vue, Svelte etc.) or vanilla JS
 
-## Why Choose anyGridJs?
+## Why Choose anyGridJS?
 
  - Vanilla JS: No dependencies, works with any JavaScript framework or vanilla JS
  - Lightweight: Minimal footprint, optimized for performance
