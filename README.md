@@ -244,7 +244,7 @@ AnyGrid is licensed under the MIT License.
 ## Keywords
 
 - JavaScript data tables
-- Js data grid
+- JS data grid
 - Table pagination js
 - Table column sorting js
 - Searchable data table js
