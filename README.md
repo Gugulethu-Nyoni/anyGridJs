@@ -1,10 +1,9 @@
-# anyGridJs
+# AnyGrid
 
 
 <img src="https://github.com/thincmedia/anyGridJs/blob/main/images/anyGridJs_Example.png" alt="anyGridJs Example">
 
-
-DataTables.js: Lightweight, feature-rich JS library for dynamic data tables. Paginated, sortable, searchable, column joining, action handles &amp; URL definition. Works with any JS framework or vanilla JS. Flexible, customizable, responsive &amp; performant. Open-source &amp; MIT licensed.
+AnyGrid is a Lightweight, feature-rich JS library for dynamic data tables with paginated, sortable, searchable, column joining, action handles &amp; URL definition. The library works with Semantq JS framework and vanilla JS. AnyGrid is flexible, customizable, responsive &amp; performant. Open-source &amp; MIT licensed.
 
 ## Key Features
 
@@ -16,7 +15,7 @@ DataTables.js: Lightweight, feature-rich JS library for dynamic data tables. Pag
   - URL Definition: Define URLs for data linking and seamless navigation
   - Framework Agnostic: Works with any JavaScript framework (React, Angular, Vue, Svelte etc.) or vanilla JS
 
-## Why Choose anyGridJs?
+## Why Choose anyGrid?
 
  - Vanilla JS: No dependencies, works with any JavaScript framework or vanilla JS
  - Lightweight: Minimal footprint, optimized for performance
@@ -222,7 +221,7 @@ const columns = [
   },
 ];
 
-// create a new instance of anyGridJs
+// create a new instance of AnyGrid
 
 const dataGrid = new anyGrid(data, columns, 10);
 ```
@@ -230,13 +229,28 @@ const dataGrid = new anyGrid(data, columns, 10);
 
 ## Contribute
 
-anyGridJs is an open-source project. Contributions, issues, and feature requests are welcome!
+AnyGrid is an open-source project. Contributions, issues, and feature requests are welcome!
 
 ## License
 
-anyGridJs is licensed under the MIT License.
+AnyGrid is licensed under the MIT License.
 
 ## Keywords
 
-Javascript datatables.
+- JavaScript data tables
+- Js data grid
+- Table pagination js
+- Table column sorting js
+- Searchable data table js
+- JS data tables with column joining
+- JS data tables with action handles
+- JS data tables with URL definition
+- Framework Agnostic js data tables
+- Vanilla JS data tables
+- Lightweight JS Library data tables
+- Customizable js data tables
+- Responsive Design js data tables
+- Front-end Development js data tables
+- Dynamic JS Data Tables
+- Interactive Data Tables
 
