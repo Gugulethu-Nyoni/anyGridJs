@@ -1,0 +1,12 @@
+{
+  "name": "anygridcss",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["anygrid js css", "css", "data-table", "pagination", "sorting"],
+  "author": "Gugulethu Nyoni <gugunnn@gmail.com>",
+  "license": "MIT",
+  "description": "A CSS library for AnyGrid data tables."
+}
