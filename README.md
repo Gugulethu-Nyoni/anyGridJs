@@ -220,11 +220,11 @@ const columns = [
 const dataGrid = new anyGrid(data, columns, 10);
 ```
 
-# Styling
+# Styling (Optional)
 
 AnyGrid is a headless js library - meaning the styling is entirely up to you, However as an option we offer a basic css library to enhance the look and feel of your data tables. If you want to use the provided css just deploy anyGrid.css via this cdn link:
 
-## CSS set up (Optional). Place this somewhere in the head section of your html.
+Place this somewhere in the head section of your html.
 
 ```html
 
