@@ -1,0 +1,30 @@
+{
+  "name": "anygridjs",
+  "version": "1.0.7",
+  "description": "Lightweight, headless, framework agnostic, feature rich, paginated, sortable, searchable data tables in plain js. Open-source & MIT licensed.",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "data grid",
+    "Javascript data tables",
+    "javascript",
+    "vanilla js"
+  ],
+  "author": "Gugulethu Nyoni",
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/anyGrid.mjs"
+  },
+  "module": "./dist/anyGrid.mjs",
+  "unpkg": "./dist/anyGrid.umd.js",
+  "main": "./dist/anyGrid.cjs.js",
+  "browser": "./dist/anyGrid.global.js",
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4"
+  }
+}

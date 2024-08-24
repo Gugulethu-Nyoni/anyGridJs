@@ -1,0 +1,6 @@
+archive/
+testserver/
+node_modules/
+src/
+.gitignore
+.npmignore
