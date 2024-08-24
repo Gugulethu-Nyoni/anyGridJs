@@ -8,11 +8,15 @@ export default {
     {
       file: 'dist/anyGrid.cjs.js',
       format: 'cjs',
+      exports: 'auto',
+      sourcemap: true,
     },
     {
       file: 'dist/anyGrid.umd.js',
       format: 'umd',
       name: 'AnyGrid',
+      exports: 'auto',
+      sourcemap: true,
     },
     {
       file: 'dist/anyGrid.mjs',
@@ -30,6 +34,7 @@ export default {
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
     }),
-    terser(), // Correct way to call the terser plugin
+    terser(),
+    // Consider adding @rollup/plugin-commonjs if needed
   ],
 };

@@ -1,4 +1,4 @@
-export class AnyGrid {
+class AnyGrid {
   constructor(data, columns, initialItemsPerPage) {
     this.data = data;
     this.columns = columns;
@@ -20,7 +20,7 @@ export class AnyGrid {
 
   // Initialize the data grid layout and event listeners
   initializeDataGrid() {
-    const dataGrid = document.querySelector('#dataGrid');
+    const dataGrid = document.querySelector('#anyGrid');
     if (dataGrid) {
       const htmlContent = `
         <input type="text" id="searchInput" placeholder="Search...">
@@ -219,3 +219,6 @@ export class AnyGrid {
     this.updatePagination();
   }
 }
+
+//export { AnyGrid };
+export default AnyGrid;
