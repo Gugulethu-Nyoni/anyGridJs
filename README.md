@@ -33,21 +33,15 @@ There are three ways to use anyGrid in your html.
 
 ## Option A: Global JS Format
 
-1. CSS set up (Optional)
 
-```html
 
-<link rel="stylesheet" href="./anyGridJs/anyGrid.css">
-
-```
-
-2. html: insert this containter somewhere in your html (before the js script tags html mark up shown in step 2)
+1. html: insert this containter somewhere in your html (before the js script tags html mark up shown in step 2)
 
 ```html
 <div id="anyGrid"></div>
 ```
 
-3. Add your js mark up in the html just before the ```html </body> ``` tag:
+2. Add your js mark up in the html just before the ```html </body> ``` tag:
 
 ```html
 <script src="https://unpkg.com/anygridjs@1.0.8/anyGrid.global.js"></script>
@@ -224,6 +218,18 @@ const columns = [
 // create a new instance of AnyGrid
 
 const dataGrid = new anyGrid(data, columns, 10);
+```
+
+# Styling
+
+AnyGrid is a headless js library - meaning the styling is entirely up to you, However as an option we offer a basic css library to enhance the look and feel of your data tables. If you want to use the provided css just deploy anyGrid.css via this cdn link:
+
+## CSS set up (Optional). Place this somewhere in the head section of your html.
+
+```html
+
+    <link rel="stylesheet" href="https://unpkg.com/anygridcss@1.0.0/anyGrid.css">
+
 ```
 
 
