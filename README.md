@@ -30,17 +30,11 @@ Get Started
 ## Usage Example
 
 
-There are two ways to use this the anyGrid package.
+There are three ways to use anyGrid in your html.
 
-## Option A: Clone the GitHub repo:
+## Option A: Global JS Format
 
-1. go to your terminal and run:
-
-```bash
-git clone https://github.com/thincmedia/anyGridJs.git
-
-````
-2. now you can use anygridjs this way in your html file
+1. CSS set up (Optional)
 
 ```html
 
@@ -48,56 +42,152 @@ git clone https://github.com/thincmedia/anyGridJs.git
 
 ```
 
+2. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
+
 ```html
+<div id="anyGrid"></div>
+```
 
-<script type="module">
+3. Add your js mark up in the html just before the </body> tag:
 
-  import { AnyGrid } from './anyGridJs/anyGrid.js';
+```html
+<script src="https://unpkg.com/anygridjs@1.0.8/anyGrid.global.js"></script>
+ <script src="app.js"></script>
+ ```
 
+ ## Your app.js 
+
+ ```javascript
+
+const data = [
+  { id: 1, name: 'John', surname: 'Doe', age: 30, role: 'Developer', salary: 50000 },
+  { id: 2, name: 'Jane', surname: 'Doe', age: 28, role: 'Designer', salary: 45000 },
+  { id: 3, name: 'Jack', surname: 'Smith', age: 34, role: 'Product Manager', salary: 60000 },
+  { id: 4, name: 'Emily', surname: 'Jones', age: 27, role: 'Marketing Specialist', salary: 47000 },
+  // add more records 
+];
+
+  const columns = [
+  { name: 'id', header: 'ID' },
+  { name: 'fullName', header: 'Full Name', joinedColumns: ['name', 'surname'] },
+  { name: 'age', header: 'Age' },
+  { name: 'role', header: 'Role' },
+  { name: 'salary', header: 'Salary',
+    actions: [
+      {
+        label: 'Edit',
+        url: 'edit/{id}',
+        class: 'edit',
+        id: 'edit-{id}',
+      },
+      {
+        label: 'Delete',
+        url: 'delete/{id}',
+        class: 'delete',
+        id: 'delete-{id}',
+        confirm: true,
+      },
+    ],
+  },
+];
+
+
+const dataGrid = new AnyGrid(data, columns, 10);
+```
+
+
+
+## Option B: Global JS Format
+
+
+1. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
+
+```html
+<div id="anyGrid"></div>
+```
+
+2. Add your js mark up in the html just before the </body> tag:
+
+```html
+  <script src="https://unpkg.com/anygridjs@1.0.8/anyGrid.umd.js"></script>
+ <script src="app.js"></script>
+ ```
+
+
+## Option C: ESM modules importmap
+
+1. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
+
+```html
+<div id="anyGrid"></div>
+```
+
+2. Add your js mark up in the html just before the </body> tag:
+
+```html
+<script type="importmap">
+{
+  "imports": {
+    "anygridjs": "https://unpkg.com/anygridjs@1.0.8/anyGrid.mjs"
+  }
+}
 </script>
 
-```
-
-
-## Option B: Via npm
-
-### Installation 
-
-
-1. go to your terminal and run:
-
-```bash
-
-npm install anygridjs
-
-````
-
-2. now you can use anygridjs this way in your html file
-
-```html
-
-<link rel="stylesheet" href="./node_modules/anygridjs/anyGrid.css">
+<script type="module" src="esm_app.js"></script>
 
 ```
 
-```html
+## esm_app.js 
 
-<script type="module">
+```javascript
+import AnyGrid from 'anygridjs';
 
-  import { AnyGrid } from './node_modules/anygridjs/anyGrid.js';
+const data = [
+  { id: 1, name: 'John', surname: 'Doe', age: 30, role: 'Developer', salary: 50000 },
+  { id: 2, name: 'Jane', surname: 'Doe', age: 28, role: 'Designer', salary: 45000 },
+  { id: 3, name: 'Jack', surname: 'Smith', age: 34, role: 'Product Manager', salary: 60000 },
+  { id: 4, name: 'Emily', surname: 'Jones', age: 27, role: 'Marketing Specialist', salary: 47000 },
+  { id: 5, name: 'Michael', surname: 'Brown', age: 40, role: 'Software Engineer', salary: 55000 },
+  { id: 6, name: 'Sarah', surname: 'Davis', age: 32, role: 'UX Researcher', salary: 52000 },
+  ];
 
-  // rest of js code (app.js) can come here e.g. data object, column definition etc ( see below)
 
-</script>
+const columns = [
+  { name: 'id', header: 'ID' },
+  { name: 'fullName', header: 'Full Name', joinedColumns: ['name', 'surname'] },
+  { name: 'age', header: 'Age' },
+  { name: 'role', header: 'Role' },
+  { name: 'salary', header: 'Salary',
+    actions: [
+      {
+        label: 'Edit',
+        url: 'edit/{id}',
+        class: 'edit',
+        id: 'edit-{id}',
+      },
+      {
+        label: 'Delete',
+        url: 'delete/{id}',
+        class: 'delete',
+        id: 'delete-{id}',
+        confirm: true,
+      },
+    ],
+  },
+];
+
+const dataGrid = new AnyGrid(data, columns, 10);
 
 ```
 
-## Javascript (app.js)
+
+
+## The data object
 ```javascript
 
 // data object (JSON)
 
-let data = [
+const data = [
   { id: 1, name: 'John', surname: 'Doe', age: 30, role: 'Developer', salary: 50000 },
   { id: 2, name: 'Jane', surname: 'Doe', age: 28, role: 'Designer', salary: 45000 },
   { id: 3, name: 'Jack', surname: 'Smith', age: 34, role: 'Product Manager', salary: 60000 }
@@ -138,13 +228,6 @@ const columns = [
 const dataGrid = new anyGrid(data, columns, 10);
 ```
 
-## HTML 
-
-```html
-
-<div id="dataGrid"></div>
-
-```
 
 ## Contribute
 

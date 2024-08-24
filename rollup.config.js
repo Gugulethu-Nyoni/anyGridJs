@@ -9,14 +9,14 @@ export default {
       file: 'dist/anyGrid.cjs.js',
       format: 'cjs',
       exports: 'auto',
-      sourcemap: true,
+      sourcemap: false,
     },
     {
       file: 'dist/anyGrid.umd.js',
       format: 'umd',
       name: 'AnyGrid',
       exports: 'auto',
-      sourcemap: true,
+      sourcemap: false,
     },
     {
       file: 'dist/anyGrid.mjs',
