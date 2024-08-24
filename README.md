@@ -42,20 +42,20 @@ There are three ways to use anyGrid in your html.
 
 ```
 
-2. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
+2. html: insert this containter somewhere in your html (before the js script tags html mark up shown in step 2)
 
 ```html
 <div id="anyGrid"></div>
 ```
 
-3. Add your js mark up in the html just before the </body> tag:
+3. Add your js mark up in the html just before the ```html </body> ``` tag:
 
 ```html
 <script src="https://unpkg.com/anygridjs@1.0.8/anyGrid.global.js"></script>
  <script src="app.js"></script>
  ```
 
- ## Your app.js 
+ ## app.js 
 
  ```javascript
 
@@ -97,7 +97,7 @@ const dataGrid = new AnyGrid(data, columns, 10);
 
 
 
-## Option B: Global JS Format
+## Option B: Universal Module Definition (UMD) JS Format
 
 
 1. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
@@ -106,13 +106,12 @@ const dataGrid = new AnyGrid(data, columns, 10);
 <div id="anyGrid"></div>
 ```
 
-2. Add your js mark up in the html just before the </body> tag:
+2. Add your js mark up in the html just before the ```html </body> ``` tag:
 
 ```html
   <script src="https://unpkg.com/anygridjs@1.0.8/anyGrid.umd.js"></script>
  <script src="app.js"></script>
  ```
-
 
 ## Option C: ESM modules importmap
 
