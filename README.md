@@ -15,7 +15,7 @@ AnyGrid is a Lightweight, feature-rich JS library for dynamic data tables with p
   - URL Definition: Define URLs for data linking and seamless navigation
   - Framework Agnostic: Works with any JavaScript framework (React, Angular, Vue, Svelte etc.) or vanilla JS
 
-## Why Choose anyGrid?
+## Why Choose AnyGrid?
 
  - Vanilla JS: No dependencies, works with any JavaScript framework or vanilla JS
  - Lightweight: Minimal footprint, optimized for performance
@@ -29,7 +29,7 @@ Get Started
 ## Usage Example
 
 
-There are three ways to use anyGrid in your html.
+There are three ways to use AnyGrid in your html.
 
 ## Option A: Global JS Format
 
@@ -38,7 +38,7 @@ There are three ways to use anyGrid in your html.
 1. html: insert this containter somewhere in your html (before the js script tags html mark up shown in step 2)
 
 ```html
-<div id="anyGrid"></div>
+<div id="anygrid"></div>
 ```
 
 2. Add your js mark up in the html just before the ```html </body> ``` tag:
@@ -96,7 +96,7 @@ const dataGrid = new AnyGrid(data, columns, 10);
 1. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
 
 ```html
-<div id="anyGrid"></div>
+<div id="anygrid"></div>
 ```
 
 2. Add your js mark up in the html just before the ```html </body> ``` tag:
@@ -111,7 +111,7 @@ const dataGrid = new AnyGrid(data, columns, 10);
 1. html: insert this containter somewhere in your html (before the js mark up shown in step 2)
 
 ```html
-<div id="anyGrid"></div>
+<div id="anygrid"></div>
 ```
 
 2. Add your js mark up in the html just before the </body> tag:
@@ -232,7 +232,7 @@ Place this somewhere in the head section of your html.
 
 ```
 
-# Using Custom Containers (useful for multipl data grids)
+# Using Custom Containers (useful for multiple data grids)
 
 By default, AnyGrid will place your data grid in the element with the id: anygrid eg:
 
@@ -257,7 +257,7 @@ const dataGrid = new anyGrid(data, columns, 10, containerId);
 const dataGrid = new anyGrid(data, columns, 10, 'users');
 ```
 
-*You need to use this approach for every instance of anyGrid you need to implement on your page.*
+*You need to use this approach for every instance of AnyGrid you need to implement on your page.*
 
 
 ## Contribute
