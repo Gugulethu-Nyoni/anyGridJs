@@ -1,4 +1,4 @@
-# AnyGrid
+  # AnyGrid
 
 
 <img src="https://github.com/thincmedia/anyGridJs/blob/main/images/anyGridJs_Example.png" alt="anyGridJs Example">
@@ -232,15 +232,38 @@ Place this somewhere in the head section of your html.
 
 ```
 
+# Using Custom Containers (useful for multipl data grids)
+
+By default, AnyGrid will place your data grid in the element with the id: anygrid eg:
+
+ ```html 
+  <div id="anygrid">Your data grid will be displayd here</div>
+  ``` 
+
+  However using custom container ids can be useful particularly if you want to display more than one data grids on the same page. 
+
+1. Define your custom container 
+
+``` html
+<div id="users"></div>
+```
+
+Having defined your data and columns for your AnyGrid instance you can then invoke the AnyGrid class with the custom container id parameter: 
+
+```javascript
+const containerId='users';
+const dataGrid = new anyGrid(data, columns, 10, containerId);
+//or 
+const dataGrid = new anyGrid(data, columns, 10, 'users');
+```
+
+*You need to use this approach for every instance of anyGrid you need to implement on your page.*
+
 
 ## Contribute
-
 AnyGrid is an open-source project. Contributions, issues, and feature requests are welcome!
-
 ## License
-
 AnyGrid is licensed under the MIT License.
-
 ## Keywords
 
 - JavaScript data tables

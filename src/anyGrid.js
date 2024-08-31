@@ -1,5 +1,5 @@
 class AnyGrid {
-  constructor(data, columns, initialItemsPerPage) {
+  constructor(data, columns, initialItemsPerPage, gridcontainerid) {
     this.data = data;
     this.columns = columns;
     this.itemsPerPage = initialItemsPerPage;
@@ -9,6 +9,7 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
+    this.gridContainerId = gridcontainerid ? `#${gridcontainerid}` : '#anyGrid';
 
     // Initialize the data grid
     this.initializeDataGrid();
@@ -20,7 +21,7 @@ class AnyGrid {
 
   // Initialize the data grid layout and event listeners
   initializeDataGrid() {
-    const dataGrid = document.querySelector('#anyGrid');
+    const dataGrid = document.querySelector(this.gridContainerId);
     if (dataGrid) {
       const htmlContent = `
         <input type="text" id="searchInput" placeholder="Search...">
