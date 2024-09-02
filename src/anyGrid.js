@@ -3,6 +3,8 @@ class AnyGrid {
     this.data = data;
     this.columns = columns;
     this.itemsPerPage = initialItemsPerPage;
+    //console.log(this.itemsPerPage);
+    //alert(this.itemsPerPage);
     this.currentPage = 1;
     this.tbody = null;
     this.searchInput = null;
@@ -20,37 +22,57 @@ class AnyGrid {
   }
 
   // Initialize the data grid layout and event listeners
-  initializeDataGrid() {
-    const dataGrid = document.querySelector(this.gridContainerId);
-    if (dataGrid) {
-      const htmlContent = `
-        <input type="text" id="searchInput" placeholder="Search...">
-        <select id="itemsPerPage">
-          <option value="5">5</option>
-          <option value="10" selected>10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-        
-        <table id="dataTable">
-          <thead>
-            <tr></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <div id="pagination"></div>
-      `;
+initializeDataGrid() {
+  const dataGrid = document.querySelector(this.gridContainerId);
+  if (dataGrid) {
+    const options = [5, 10, 20, 50, 100]; // Define possible itemsPerPage options
+
+    // Generate select options dynamically
+    const selectOptions = options.map(option => `
+      <option value="${option}" ${option === this.itemsPerPage ? 'selected' : ''}>${option}</option>
+    `).join('');
+
+    const htmlContent = `
+      <input type="text" id="searchInput" placeholder="Search...">
+      <select id="itemsPerPage">
+        ${selectOptions}
+      </select>
       
-      dataGrid.insertAdjacentHTML('afterbegin', htmlContent);
+      <table id="dataTable">
+        <thead>
+          <tr></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="pagination"></div>
+    `;
+    dataGrid.insertAdjacentHTML('afterbegin', htmlContent);
 
-      // Add event listeners programmatically
-      const searchInput = document.querySelector('#searchInput');
-      searchInput.addEventListener('input', this.searchTable.bind(this));
-      const itemsPerPageSelect = document.querySelector('#itemsPerPage');
-      itemsPerPageSelect.addEventListener('change', (event) => this.updateItemsPerPage(event.target.value));
-    }
+    // Add event listeners programmatically
+    const searchInput = document.querySelector('#searchInput');
+    searchInput.addEventListener('input', this.searchTable.bind(this));
 
+    const itemsPerPageSelect = document.querySelector('#itemsPerPage');
+    itemsPerPageSelect.value = this.itemsPerPage; // Set the initial value
+
+    itemsPerPageSelect.addEventListener('change', (event) => {
+      this.itemsPerPage = parseInt(event.target.value); // Update the value
+      this.currentPage = 1; // Reset the current page
+      this.renderData();
+      this.updatePagination();
+    });
+
+    this.tbody = document.querySelector('#dataTable tbody');
+    this.paginationContainer = document.querySelector('#pagination');
+
+    this.renderData(this.data);
+    this.updatePagination();
+  }
+}
+
+
+
+/*
     this.tbody = document.querySelector('#dataTable tbody');
     this.itemsPerPage = document.querySelector('#itemsPerPage');
     this.paginationContainer = document.querySelector('#pagination');
@@ -58,6 +80,7 @@ class AnyGrid {
     this.renderData(this.data);
     this.updatePagination();
   }
+*/
 
   // Render the data in the table
   renderData() {
@@ -91,11 +114,15 @@ class AnyGrid {
       headerCell.textContent = action.label;
       headerRow.appendChild(headerCell);
     });
+
   }
 
     // Render rows of data
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage.value;
-    const endIndex = Math.min(this.currentPage * this.itemsPerPage.value, this.data.length);
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    //const endIndex = Math.min(this.currentPage * this.itemsPerPage.value, this.data.length);
+    const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
+
+
     this.filteredData.slice(startIndex, endIndex).forEach((item) => {
       const row = document.createElement('tr');
 
@@ -115,6 +142,7 @@ class AnyGrid {
       });
 
       // Render actions for the last column
+        if (actionColumn) {
         actionColumn.actions.forEach((action) => {
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
@@ -138,11 +166,14 @@ class AnyGrid {
         row.appendChild(actionCell);
       });
 
+      }
+
       this.tbody.appendChild(row);
     });
 
     this.updatePagination();
   }
+
 
 
 
@@ -155,25 +186,43 @@ class AnyGrid {
   }
 
   // Update pagination buttons
-  updatePagination() {
-    const totalPages = Math.ceil(this.data.length / this.itemsPerPage.value); // Recalculate total pages
-    const startPage = Math.max(1, this.currentPage - 5);
-    const endPage = Math.min(startPage + 10, totalPages);
+ updatePagination() {
+  // Ensure this.itemsPerPage is directly used as an integer
+  const itemsPerPage = this.itemsPerPage;  // No need to access '.value'
+  
+  // Calculate total pages based on the length of the filtered data
+  const totalPages = Math.ceil(this.filteredData.length / itemsPerPage); 
+  
+  // Determine the start and end range for pagination buttons
+  const startPage = Math.max(1, this.currentPage - 5);  // Show up to 5 pages before current
+  const endPage = Math.min(startPage + 9, totalPages);  // Show up to 9 pages after current
 
-    this.paginationContainer.innerHTML = '';
+  // Clear previous pagination buttons
+  this.paginationContainer.innerHTML = '';
 
-    for (let i = startPage; i <= endPage; i++) {
-      const button = document.createElement('button');
-      button.textContent = i;
-      button.classList.add('pagination-button');
-      button.onclick = () => {
-        this.currentPage = i;
-        this.renderData(); // Render data for the new page
-        this.updatePagination(); // Update pagination buttons after rendering data
-      };
-      this.paginationContainer.appendChild(button);
+  // Create pagination buttons dynamically
+  for (let i = startPage; i <= endPage; i++) {
+    const button = document.createElement('button');
+    button.textContent = i;
+    button.classList.add('pagination-button');
+    
+    // Highlight the current active page
+    if (i === this.currentPage) {
+      button.classList.add('active');
     }
+    
+    // Add click event to change the current page
+    button.onclick = () => {
+      this.currentPage = i;  // Update the current page
+      this.renderData();     // Re-render the data for the new page
+      this.updatePagination();  // Update the pagination buttons
+    };
+    
+    // Append the button to the pagination container
+    this.paginationContainer.appendChild(button);
   }
+}
+
 
   // Filter the table based on search input
   searchTable = (event) => {
@@ -230,5 +279,8 @@ class AnyGrid {
   }
 }
 
-//export { AnyGrid };
 export default AnyGrid;
+
+
+
+
