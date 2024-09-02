@@ -82,9 +82,7 @@ class AnyGrid {
 
     // Render action headers for the last column
     const actionColumn = this.columns.find(col => col.name === 'actions');
-    if (actionColumn) {
-
-
+    if (actionColumn) {  // Check if the column has actions before rendering headers
     const actionColumn = this.columns[this.columns.length - 1];
     actionColumn.actions.forEach((action) => {
       const headerCell = document.createElement('th');
@@ -92,6 +90,8 @@ class AnyGrid {
       headerRow.appendChild(headerCell);
     });
   }
+
+
 
     // Render rows of data
     const startIndex = (this.currentPage - 1) * this.itemsPerPage.value;
@@ -115,6 +115,7 @@ class AnyGrid {
       });
 
       // Render actions for the last column
+      if (actionColumn) {  // Check if the column has actions
         actionColumn.actions.forEach((action) => {
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
@@ -137,6 +138,8 @@ class AnyGrid {
         actionCell.appendChild(actionLink);
         row.appendChild(actionCell);
       });
+
+      }
 
       this.tbody.appendChild(row);
     });
