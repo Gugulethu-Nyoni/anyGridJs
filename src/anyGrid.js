@@ -123,6 +123,7 @@ initializeDataGrid() {
     const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
 
 
+/*
     this.filteredData.slice(startIndex, endIndex).forEach((item) => {
       const row = document.createElement('tr');
 
@@ -140,6 +141,40 @@ initializeDataGrid() {
           row.appendChild(cell);
         }
       });
+
+*/
+
+
+  this.filteredData.slice(startIndex, endIndex).forEach((item) => {
+  const row = document.createElement('tr');
+
+  this.columns.forEach((column) => {
+    if (!column.hidden) {
+      const cell = document.createElement('td');
+      let value = column.joinedColumns ? column.joinedColumns.map(col => item[col]).join(' ') : item[column.name];
+
+      if (column.render) {
+      if (typeof column.render === 'string') {
+      cell.innerHTML = column.render.replace(`{${column.name}}`, value);
+      } else if (typeof column.render === 'function') {
+      cell.innerHTML = column.render(value, item);
+      }
+      }
+
+
+      else {
+        if (column.joinedColumns) {
+          cell.textContent = value;
+          cell.setAttribute('colspan', column.joinedColumns.length);
+        } else {
+          cell.textContent = value;
+        }
+      }
+
+      row.appendChild(cell);
+    }
+  });
+
 
       // Render actions for the last column
         if (actionColumn) {
