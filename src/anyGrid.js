@@ -89,6 +89,7 @@ initializeDataGrid() {
     headerRow.innerHTML = '';
 
     // Create table headers
+    /*
     this.columns.forEach((column, index) => {
       if (!column.hidden) {
         const headerCell = document.createElement('th');
@@ -102,6 +103,34 @@ initializeDataGrid() {
         headerRow.appendChild(headerCell);
       }
     });
+    */
+
+
+// Create table headers
+this.columns.forEach((column, index) => {
+  if (!column.hidden) {
+    const headerCell = document.createElement('th');
+    headerCell.textContent = column.label || column.header;
+    if (column.joinedColumns) {
+      headerCell.setAttribute('colspan', column.joinedColumns.length); // Set colspan for joined columns
+    } else {
+      if (column.sortable) {
+        headerCell.dataset.index = index;
+        headerCell.addEventListener('click', () => this.sortTable(index));
+        
+        // Add sortable icon
+        const sortableIcon = document.createElement('span');
+        sortableIcon.innerHTML = ' ⇅'; // Use the Unicode character for the icon
+        sortableIcon.style.fontSize = '0.8em';
+        sortableIcon.style.marginLeft = '0.2em';
+        sortableIcon.className = 'anygrid-column-sortable'; // Add class attribute
+        headerCell.appendChild(sortableIcon);
+      }
+    }
+    headerRow.appendChild(headerCell);
+  }
+});
+
 
     // Render action headers for the last column
     //const actionColumn = this.columns.find(col => col.name === 'actions');
@@ -168,7 +197,6 @@ initializeDataGrid() {
           cell.textContent = value;
         }
       }
-
       tr.appendChild(cell);
     }
   });
