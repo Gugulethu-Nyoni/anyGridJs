@@ -1,11 +1,8 @@
 
-body {
-    font-family: 'Poppins';font-size: 11px;
-}
-
   #dataTable {
     width: 100%;
     border-collapse: collapse;
+    font-family: 'Poppins';font-size: 11px;
   }
 
   #dataTable th,
@@ -50,6 +47,10 @@ body {
     }
   }
   #pagination {margin-top: 0.5em}
+
+.anygrid-column-sortable::after {
+  
+}
   
   .edit {background-color: #0275d8; border-radius:10px; padding: 0.5em; color: #fff; text-decoration: none; font-size: 11px;}
   
