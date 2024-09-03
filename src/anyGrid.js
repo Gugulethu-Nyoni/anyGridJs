@@ -104,18 +104,18 @@ initializeDataGrid() {
     });
 
     // Render action headers for the last column
-    const actionColumn = this.columns.find(col => col.name === 'actions');
+    //const actionColumn = this.columns.find(col => col.name === 'actions');
+    const actionColumn = this.columns.find(col => col.actions);
+    console.log('Action Column:', actionColumn);
     if (actionColumn) {
-
-
-    const actionColumn = this.columns[this.columns.length - 1];
+      console.log("inside actions first if");
     actionColumn.actions.forEach((action) => {
-      const headerCell = document.createElement('th');
-      headerCell.textContent = action.label;
-      headerRow.appendChild(headerCell);
-    });
-
+    const headerCell = document.createElement('th');
+    headerCell.textContent = action.label;
+    headerRow.appendChild(headerCell);
+   });
   }
+
 
     // Render rows of data
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -145,9 +145,8 @@ initializeDataGrid() {
 */
 
 
-  this.filteredData.slice(startIndex, endIndex).forEach((item) => {
+  this.filteredData.slice(startIndex, endIndex).forEach((row) => {
   const tr = document.createElement('tr');
-
   this.columns.forEach((column) => {
     if (!column.hidden) {
       const cell = document.createElement('td');
@@ -177,18 +176,19 @@ initializeDataGrid() {
 
       // Render actions for the last column
         if (actionColumn) {
+        console.log("inside actions second if");
         actionColumn.actions.forEach((action) => {
         const actionCell = document.createElement('td');
         const actionLink = document.createElement('a');
         actionLink.textContent = action.label;
-        actionLink.href = action.url.replace('{id}', item.id);
+        actionLink.href = action.url.replace('{id}', row.id);
 
         // Add class and id if they exist in the action object
         if (action.class) {
           actionLink.classList.add(action.class);
         }
         if (action.id) {
-          actionLink.id = action.id.replace('{id}', item.id);
+          actionLink.id = action.id.replace('{id}', row.id);
         }
 
         // Add onclick attribute for confirmation if specified
