@@ -1,0 +1,69 @@
+# Table Configuration and Rendering
+
+## Column Configuration
+
+The table columns are configured using an array of column objects. Each column can specify various properties to control its rendering and functionality. Below is a sample configuration and an explanation of the available options:
+
+```javascript
+const columns = [
+  { name: 'id', header: 'ID', render: (value, row) => `<a href="/user/profile/${row.id}">${row.id}</a>`, sortable: true },
+  { name: 'fullName', header: 'Full Name', joinedColumns: ['name', 'surname'] },
+  { name: 'age', header: 'Age', sortable: true },
+  { name: 'role', header: 'Role' },
+  { name: 'salary', header: 'Salary', render: '<strong>R{salary}</strong>', sortable: true,
+    actions: [
+      {
+        label: 'Edit',
+        url: 'edit/{id}',
+        class: 'edit',
+        id: 'edit-{id}',
+      },
+      {
+        label: 'Delete',
+        url: 'delete/{id}',
+        class: 'delete',
+        id: 'delete-{id}',
+        confirm: true,
+      }, 
+    ], 
+  },
+];
+
+
+
+
+## Column Options
+
+- **name**: The key to access the column data in each row object.
+- **header**: The text to display in the column header.
+- **render**: Defines how the cell content is rendered. Can be:
+  - A string with `{}` placeholders replaced by the column's data.
+  - A function that receives the cell value and row object, returning HTML content.
+- **sortable**: A boolean that indicates if the column is sortable.
+- **joinedColumns**: An array of column names to concatenate for display in the current column.
+- **actions**: An optional array specifying actions that can be performed on the data in the row. Each action can have:
+  - `label`: The text for the action link.
+  - `url`: The URL for the action link, with `{id}` placeholder replaced by the row's ID.
+  - `class`: An optional CSS class for the action link.
+  - `id`: An optional ID for the action link, with `{id}` placeholder replaced by the row's ID.
+  - `confirm`: An optional boolean to add a confirmation prompt before the action is performed.
+
+## Features
+
+1. **Custom Data Rendering**
+
+   Columns can render data using either plain text, HTML, or a custom function. The `render` property allows you to define how the cell content appears, giving you flexibility in displaying the data.
+
+2. **Optional Action Columns**
+
+   Action columns are not required and can be omitted if no actions are needed. When included, you can define multiple actions with customizable labels, URLs, classes, and confirmation prompts.
+
+3. **Sortable Columns**
+
+   You can specify which columns are sortable using the `sortable` property. Set it to `true` to enable sorting functionality on that column.
+
+4. **Unicode Icons for Sortable Columns**
+
+   We use a Unicode icon to indicate sortable columns. This icon is dynamically added to the column headers and styled with CSS to clearly show which columns can be sorted.
+
+   

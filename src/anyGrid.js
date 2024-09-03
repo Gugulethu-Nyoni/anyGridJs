@@ -11,7 +11,7 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
-    this.gridContainerId = gridcontainerid ? `#${gridcontainerid}` : '#anyGrid';
+    this.gridContainerId = gridcontainerid ? `#${gridcontainerid}` : '#anygrid';
 
     // Initialize the data grid
     this.initializeDataGrid();
@@ -33,10 +33,12 @@ initializeDataGrid() {
     `).join('');
 
     const htmlContent = `
+      <div class="search-container"> 
       <input type="text" id="searchInput" placeholder="Search...">
       <select id="itemsPerPage">
         ${selectOptions}
       </select>
+      </div>
       
       <table id="dataTable">
         <thead>
