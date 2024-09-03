@@ -123,7 +123,7 @@ this.columns.forEach((column, index) => {
         // Add sortable icon
         const sortableIcon = document.createElement('span');
         sortableIcon.innerHTML = ' ⇅'; // Use the Unicode character for the icon
-        sortableIcon.style.fontSize = '0.8em';
+        sortableIcon.style.fontSize = '1.1em';
         sortableIcon.style.marginLeft = '0.2em';
         sortableIcon.className = 'anygrid-column-sortable'; // Add class attribute
         headerCell.appendChild(sortableIcon);
