@@ -146,22 +146,21 @@ initializeDataGrid() {
 
 
   this.filteredData.slice(startIndex, endIndex).forEach((item) => {
-  const row = document.createElement('tr');
+  const tr = document.createElement('tr');
 
   this.columns.forEach((column) => {
     if (!column.hidden) {
       const cell = document.createElement('td');
-      let value = column.joinedColumns ? column.joinedColumns.map(col => item[col]).join(' ') : item[column.name];
+      let value = column.joinedColumns ? column.joinedColumns.map(col => row[col]).join(' ') : row[column.name];
 
       if (column.render) {
       if (typeof column.render === 'string') {
       cell.innerHTML = column.render.replace(`{${column.name}}`, value);
       } else if (typeof column.render === 'function') {
-      cell.innerHTML = column.render(value, item);
+      cell.innerHTML = column.render(value, row);
       }
       }
-
-
+///
       else {
         if (column.joinedColumns) {
           cell.textContent = value;
@@ -171,7 +170,7 @@ initializeDataGrid() {
         }
       }
 
-      row.appendChild(cell);
+      tr.appendChild(cell);
     }
   });
 
@@ -198,12 +197,12 @@ initializeDataGrid() {
         }
 
         actionCell.appendChild(actionLink);
-        row.appendChild(actionCell);
+        tr.appendChild(actionCell);
       });
 
       }
 
-      this.tbody.appendChild(row);
+      this.tbody.appendChild(tr);
     });
 
     this.updatePagination();
