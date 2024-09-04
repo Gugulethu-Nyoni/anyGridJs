@@ -33,7 +33,7 @@ class AnyGrid {
 initializeDataGrid() {
   //const dataGrid = document.querySelector(this.gridContainerId);
   const dataGrid = document.getElementById(this.gridContainerId);
-  //alert("DATAGRID",dataGrid);
+
   if (dataGrid) {
     const options = [5, 10, 20, 50, 100]; // Define possible itemsPerPage options
 
@@ -75,8 +75,11 @@ initializeDataGrid() {
     });
 
     this.tbody = document.querySelector(`#${this.dataTableId} tbody`);
-    this.paginationContainer = document.querySelector(`${this.paginationContainerId}`);
+    this.paginationContainer = document.getElementById(`${this.paginationContainerId}`);
+    console.log("PGNC",this.paginationContainer);
+    console.log("PGNCID",this.paginationContainerId);
 
+    //
     this.renderData(this.data);
     this.updatePagination();
   }
