@@ -11,8 +11,11 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
-    this.dataTableId= this.generateUniqueId('anygrid-datatable');
+    this.dataTableId = this.generateUniqueId('anygrid-datatable');
     this.paginationContainerId= this.generateUniqueId('anygrid-pagination');
+    this.searchInputId = this.generateUniqueId('search-input');
+    this.itemsPerPageId = this.generateUniqueId('items-per-page');
+
     this.gridContainerId = gridcontainerid ? `${gridcontainerid}` : 'anygrid';
 
     // Initialize the data grid
@@ -44,8 +47,8 @@ initializeDataGrid() {
 
     const htmlContent = `
       <div class="search-container"> 
-      <input type="text" id="searchInput" placeholder="Search...">
-      <select id="itemsPerPage">
+      <input type="text" id="${this.searchInputId}" placeholder="Search...">
+      <select id="${this.itemsPerPageId}">
         ${selectOptions}
       </select>
       </div>
@@ -61,10 +64,10 @@ initializeDataGrid() {
     dataGrid.insertAdjacentHTML('afterbegin', htmlContent);
 
     // Add event listeners programmatically
-    const searchInput = document.querySelector('#searchInput');
+    const searchInput = document.getElementById(`${this.searchInputId}`);
     searchInput.addEventListener('input', this.searchTable.bind(this));
 
-    const itemsPerPageSelect = document.querySelector('#itemsPerPage');
+    const itemsPerPageSelect = document.getElementById(`${this.itemsPerPageId}`);
     itemsPerPageSelect.value = this.itemsPerPage; // Set the initial value
 
     itemsPerPageSelect.addEventListener('change', (event) => {
