@@ -11,6 +11,7 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
+    this.dataTableId= generateUniqueTableId();
     this.gridContainerId = gridcontainerid ? `${gridcontainerid}` : 'anygrid';
     alert(this.gridContainerId);
 
@@ -21,6 +22,13 @@ class AnyGrid {
     this.searchInput = document.getElementById('searchInput');
     this.searchInput.addEventListener('input', this.searchTable.bind(this));
   }
+
+
+  generateUniqueTableId(prefix = 'anygrid-datatable') {
+      const randomPart = Math.random().toString(36).substring(2, 7); // Generate a 5-character random string
+      return `${prefix}-${randomPart}`;
+    }
+
 
   // Initialize the data grid layout and event listeners
 initializeDataGrid() {
@@ -43,7 +51,7 @@ initializeDataGrid() {
       </select>
       </div>
       
-      <table class="anygrid-table" id="dataTable">
+      <table class="anygrid-table" id="${this.dataTableId}">
         <thead>
           <tr></tr>
         </thead>
@@ -67,7 +75,7 @@ initializeDataGrid() {
       this.updatePagination();
     });
 
-    this.tbody = document.querySelector('#dataTable tbody');
+    this.tbody = document.querySelector(`#${this.dataTableId} tbody`);
     this.paginationContainer = document.querySelector('#pagination');
 
     this.renderData(this.data);
@@ -90,7 +98,7 @@ initializeDataGrid() {
   // Render the data in the table
   renderData() {
     this.tbody.innerHTML = '';
-    const headerRow = document.querySelector('#dataTable thead tr');
+    const headerRow = document.querySelector(`#${this.dataTableId} thead tr`);
     headerRow.innerHTML = '';
 
     // Create table headers
