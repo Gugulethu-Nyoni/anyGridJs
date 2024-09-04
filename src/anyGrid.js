@@ -11,20 +11,19 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
-    this.dataTableId= this.generateUniqueTableId();
+    this.dataTableId= this.generateUniqueId('anygrid-datatable');
+    this.paginationContainerId= this.generateUniqueId('anygrid-pagination');
     this.gridContainerId = gridcontainerid ? `${gridcontainerid}` : 'anygrid';
-    alert(this.gridContainerId);
 
     // Initialize the data grid
     this.initializeDataGrid();
-
     // Set up search input
     this.searchInput = document.getElementById('searchInput');
     this.searchInput.addEventListener('input', this.searchTable.bind(this));
   }
 
 
-  generateUniqueTableId(prefix = 'anygrid-datatable') {
+  generateUniqueId(prefix) {
       const randomPart = Math.random().toString(36).substring(2, 7); // Generate a 5-character random string
       return `${prefix}-${randomPart}`;
     }
@@ -57,7 +56,7 @@ initializeDataGrid() {
         </thead>
         <tbody></tbody>
       </table>
-      <div id="pagination"></div>
+      <div id="${this.paginationContainerId}" class="anygrid-pagination"></div>
     `;
     dataGrid.insertAdjacentHTML('afterbegin', htmlContent);
 
@@ -76,7 +75,7 @@ initializeDataGrid() {
     });
 
     this.tbody = document.querySelector(`#${this.dataTableId} tbody`);
-    this.paginationContainer = document.querySelector('#pagination');
+    this.paginationContainer = document.querySelector(`${this.paginationContainerId}`);
 
     this.renderData(this.data);
     this.updatePagination();
@@ -85,38 +84,11 @@ initializeDataGrid() {
 
 
 
-/*
-    this.tbody = document.querySelector('#dataTable tbody');
-    this.itemsPerPage = document.querySelector('#itemsPerPage');
-    this.paginationContainer = document.querySelector('#pagination');
-
-    this.renderData(this.data);
-    this.updatePagination();
-  }
-*/
-
   // Render the data in the table
   renderData() {
     this.tbody.innerHTML = '';
     const headerRow = document.querySelector(`#${this.dataTableId} thead tr`);
     headerRow.innerHTML = '';
-
-    // Create table headers
-    /*
-    this.columns.forEach((column, index) => {
-      if (!column.hidden) {
-        const headerCell = document.createElement('th');
-        headerCell.textContent = column.label || column.header;
-        if (column.joinedColumns) {
-          headerCell.setAttribute('colspan', column.joinedColumns.length); // Set colspan for joined columns
-        } else {
-          headerCell.dataset.index = index;
-          headerCell.addEventListener('click', () => this.sortTable(index));
-        }
-        headerRow.appendChild(headerCell);
-      }
-    });
-    */
 
 
 // Create table headers
@@ -163,28 +135,6 @@ this.columns.forEach((column, index) => {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     //const endIndex = Math.min(this.currentPage * this.itemsPerPage.value, this.data.length);
     const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.filteredData.length);
-
-
-/*
-    this.filteredData.slice(startIndex, endIndex).forEach((item) => {
-      const row = document.createElement('tr');
-
-      this.columns.forEach((column) => {
-        if (!column.hidden) {
-          const cell = document.createElement('td');
-          if (column.joinedColumns) {
-            // Concatenate values from joined columns
-            const joinedValue = column.joinedColumns.map(col => item[col]).join(' ');
-            cell.textContent = joinedValue;
-            cell.setAttribute('colspan', column.joinedColumns.length);
-          } else {
-            cell.textContent = item[column.name];
-          }
-          row.appendChild(cell);
-        }
-      });
-
-*/
 
 
   this.filteredData.slice(startIndex, endIndex).forEach((row) => {
