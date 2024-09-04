@@ -11,7 +11,8 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
-    this.gridContainerId = gridcontainerid ? `#${gridcontainerid}` : '#anygrid';
+    this.gridContainerId = gridcontainerid ? `${gridcontainerid}` : 'anygrid';
+    alert(this.gridContainerId);
 
     // Initialize the data grid
     this.initializeDataGrid();
@@ -23,7 +24,9 @@ class AnyGrid {
 
   // Initialize the data grid layout and event listeners
 initializeDataGrid() {
-  const dataGrid = document.querySelector(this.gridContainerId);
+  //const dataGrid = document.querySelector(this.gridContainerId);
+  const dataGrid = document.getElementById(this.gridContainerId);
+  //alert("DATAGRID",dataGrid);
   if (dataGrid) {
     const options = [5, 10, 20, 50, 100]; // Define possible itemsPerPage options
 
@@ -40,7 +43,7 @@ initializeDataGrid() {
       </select>
       </div>
       
-      <table id="dataTable">
+      <table class="anygrid-table" id="dataTable">
         <thead>
           <tr></tr>
         </thead>
