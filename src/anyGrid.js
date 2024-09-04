@@ -21,7 +21,7 @@ class AnyGrid {
     // Initialize the data grid
     this.initializeDataGrid();
     // Set up search input
-    this.searchInput = document.getElementById('searchInput');
+    this.searchInput = document.getElementById(`${this.searchInputId}`);
     this.searchInput.addEventListener('input', this.searchTable.bind(this));
   }
 
