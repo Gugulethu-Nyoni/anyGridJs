@@ -47,8 +47,8 @@ initializeDataGrid() {
 
     const htmlContent = `
       <div class="search-container"> 
-      <input type="text" id="${this.searchInputId}" placeholder="Search...">
-      <select id="${this.itemsPerPageId}">
+      <input type="text" id="${this.searchInputId}" class="anygrid-search-input" placeholder="Search...">
+      <select id="${this.itemsPerPageId}" class="items-per-page">
         ${selectOptions}
       </select>
       </div>
