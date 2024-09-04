@@ -11,7 +11,7 @@ class AnyGrid {
     this.paginationContainer = null;
     this.filteredData = this.data;
     this.sortingOrder = {};
-    this.dataTableId= generateUniqueTableId();
+    this.dataTableId= this.generateUniqueTableId();
     this.gridContainerId = gridcontainerid ? `${gridcontainerid}` : 'anygrid';
     alert(this.gridContainerId);
 
