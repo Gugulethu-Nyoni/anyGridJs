@@ -38,12 +38,24 @@
 
     (async () => {
       try {
+        
         const response = await api.get(`/student/students/event/${eventId}`);
         console.log("Relation HERE", JSON.stringify(response, null, 2));
 
-        const studentsData = Object.values(response).filter(
-          item => typeof item === 'object' && item !== null && !Array.isArray(item)
-        );
+        console.log("Raw Response", response);
+        
+         const studentsData= api.getData(response);
+
+        console.log("Extracted Data", studentsData);
+
+
+  
+  // OR
+    //      const dataClient = new smQL(); // Create an instance
+    //     const studentsData = dataClient.getData(response); 
+
+          // Call the method on the instance, passing the data as an argument
+
 
         // Define columns for the students object
         const studentColumns = [
@@ -152,7 +164,8 @@
         Notification.show({
           type: 'success',
           message: 'Success',
-          duration: 3000,
+          duration: 0,
+          closeable: true,
           successColor: '#009688',
           
         });

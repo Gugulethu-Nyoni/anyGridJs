@@ -1,6 +1,6 @@
 // smQL.js - Final version
 export class smQL {
-  constructor(baseURL, defaultHeaders = {}, options = {}) {
+  constructor(baseURL ='', defaultHeaders = {}, options = {}) {
     this.baseURL = baseURL;
     this.defaultHeaders = {
       'Content-Type': 'application/json',
@@ -72,6 +72,13 @@ export class smQL {
       }
       throw error;
     }
+  }
+
+  getData (response) {
+    const data = Object.values(response).filter(
+        item => typeof item === 'object' && item !== null && !Array.isArray(item)
+        );
+    return data; 
   }
 
   get(endpoint, headers = {}) {
