@@ -1,6 +1,1341 @@
 "use strict";
+const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+/* DEFAULT THEME: PURE DARK */
+.default-theme {
+    --background-dark: #121212;
+    --background-light: #1e1e1e;
+    --text-light: #e0e0e0;
+    --border-color: #333333;
+    --input-background: #1e1e1e;
+    --input-background-disabled: #2a2a2a;
+    --label-color: #a0a0a0;
+    --radio-checkbox-accent: #666666;
+    --button-background: #252525;
+    --button-background-hover: #383838;
+    --edit-background: #444444;
+    --delete-background: #884d4d;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --primary-color: #444444;
+    --primary-color-rgb: 68, 68, 68;
+    --secondary-color: #666666;
+    --secondary-color-rgb: 102, 102, 102;
+}
+
+
+.dark-theme {
+    --background-dark: #121212;
+    --background-light: #1e1e1e;
+    --text-light: #e0e0e0;
+    --border-color: #333333;
+    --input-background: #1e1e1e;
+    --input-background-disabled: #2a2a2a;
+    --label-color: #a0a0a0;
+    --radio-checkbox-accent: #666666;
+    --button-background: #252525;
+    --button-background-hover: #383838;
+    --edit-background: #444444;
+    --delete-background: #884d4d;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --primary-color: #444444;
+    --primary-color-rgb: 68, 68, 68;
+    --secondary-color: #666666;
+    --secondary-color-rgb: 102, 102, 102;
+}
+
+/* Light theme */
+.light-theme {
+    --background-dark: #ededeb;
+    --background-light: #f9f9f9;
+    --text-light: #333333;
+    --border-color: #cccccc;
+    --input-background: #ffffff;
+    --input-background-disabled: #e0e0e0;
+    --label-color: #5a2d81;
+    --radio-checkbox-accent: #5a2d81;
+    --button-background: #8a8787;
+    --button-background-hover: #666;
+    --edit-background: #e91e63;
+    --delete-background: #dc3545;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(79, 77, 77, 0.1);
+    --primary-color: #4f4d4d;
+    --primary-color-rgb: 79, 77, 77;
+    --secondary-color: #5a2d81;
+    --secondary-color-rgb: 90, 45, 129;
+}
+
+/* Pink theme */
+.pink-theme {
+    --background-dark: #fce4ec;
+    --background-light: #f8bbd0;
+    --text-light: #880e4f;
+    --border-color: #f48fb1;
+    --input-background: #ffffff;
+    --input-background-disabled: #f1f8e9;
+    --label-color: #c2185b;
+    --radio-checkbox-accent: #c2185b;
+    --button-background: #c2185b;
+    --button-background-hover: #ad1457;
+    --edit-background: #ad1457;
+    --delete-background: #d32f2f;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-color: #c2185b;
+    --primary-color-rgb: 194, 24, 91;
+    --secondary-color: #ad1457;
+    --secondary-color-rgb: 173, 20, 87;
+}
+
+/* Indigo theme */
+.indigo-theme {
+    --background-dark: #2f3640;
+    --background-light: #3b4151;
+    --text-light: #f7f7f7;
+    --border-color: #434a54;
+    --input-background: #2f3640;
+    --input-background-disabled: #3b4151;
+    --label-color: #8b94b3;
+    --radio-checkbox-accent: #8b94b3;
+    --button-background: #452b8b;
+    --button-background-hover: #3b2f6b;
+    --edit-background: #452b8b;
+    --delete-background: #e74c3c;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --primary-color: #452b8b;
+    --primary-color-rgb: 69, 43, 139;
+    --secondary-color: #3b2f6b;
+    --secondary-color-rgb: 59, 47, 107;
+}
+
+/* Blue theme */
+.blue-theme {
+    --background-dark: #87ceeb;
+    --background-light: #add8e6;
+    --text-light: #1a237e;
+    --border-color: #87ceeb;
+    --input-background: #f7f7f7;
+    --input-background-disabled: #e5e5e5;
+    --label-color: #2196f3;
+    --radio-checkbox-accent: #2196f3;
+    --button-background: #03a9f4;
+    --button-background-hover: #039be5;
+    --edit-background: #03a9f4;
+    --delete-background: #e74c3c;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-color: #03a9f4;
+    --primary-color-rgb: 3, 169, 244;
+    --secondary-color: #039be5;
+    --secondary-color-rgb: 3, 155, 229;
+}
+
+/* Dark Orange theme */
+.dark-orange-theme {
+    --background-dark: #2f2f2f;
+    --background-light: #3c3c3c;
+    --text-light: #ffffff;
+    --border-color: #666;
+    --input-background: #3c3c3c;
+    --input-background-disabled: #4c4c4c;
+    --label-color: #ffa07a;
+    --radio-checkbox-accent: #ffa07a;
+    --button-background: #ff9900;
+    --button-background-hover: #e68f00;
+    --edit-background: #ff9900;
+    --delete-background: #e74c3c;
+    --text-contrast: #000000;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --primary-color: #ff9900;
+    --primary-color-rgb: 255, 153, 0;
+    --secondary-color: #e68f00;
+    --secondary-color-rgb: 230, 143, 0;
+}
+
+.green-theme {
+    --background-dark: #f2f9f2;
+    --background-light: #e5e5e5;
+    --text-light: #2f4f2f;
+    --border-color: #c6efce;
+    --input-background: #f7fff7;
+    --input-background-disabled: #e5e5e5;
+    --label-color: #87b087;
+    --radio-checkbox-accent: #87b087;
+    --button-background: #004d00;
+    --button-background-hover: #003300;
+    --button-text-color: #ffffff;
+    --edit-background: #004d00;
+    --delete-background: #990000;
+    --text-contrast: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-color: #004d00;
+    --primary-color-rgb: 0, 77, 0;
+    --secondary-color: #003300;
+    --secondary-color-rgb: 0, 51, 0;
+}
+
+/* ==================================================== */
+/* GENERAL DATA GRID CONTAINER STYLING                  */
+/* ==================================================== */
+
+.anygrid-container {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+    background-color: var(--background-dark);
+    margin: 1rem auto;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Table wrapper for horizontal scrolling */
+.anygrid-table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    width: 100%;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+
+/* ==================================================== */
+/* STICKY TABLE HEADERS - VERTICAL                      */
+/* ==================================================== */
+
+/* Ensure the table wrapper has a fixed height for vertical scrolling */
+.anygrid-table-wrapper {
+    max-height: 70vh; /* Limit height to 70% of viewport */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Enhanced sticky header styling */
+.anygrid-table thead tr {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--input-background);
+}
+
+/* Ensure sticky header has proper layering */
+.anygrid-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Add shadow to sticky header when scrolled */
+.anygrid-table thead tr.sticky-active {
+    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+}
+
+/* Ensure sticky first column has higher z-index than header */
+.anygrid-table th:first-child,
+.anygrid-table td:first-child {
+    z-index: 15; /* Higher than header's z-index */
+}
+
+/* Reset sticky behavior on mobile */
+@media (max-width: 768px) {
+    .anygrid-table-wrapper {
+        max-height: none; /* Remove height limit on mobile */
+        overflow-y: visible; /* Disable vertical scrolling */
+    }
+    
+    .anygrid-table thead tr,
+    .anygrid-table thead {
+        position: static; /* Disable sticky on mobile */
+        z-index: auto;
+    }
+    
+    .anygrid-table th:first-child,
+    .anygrid-table td:first-child {
+        position: static;
+        z-index: auto;
+    }
+}
+
+/* Smooth scrolling behavior */
+.anygrid-table-wrapper {
+    scroll-behavior: smooth;
+}
+
+/* Optional: Add a fade effect at the bottom when scrolling */
+.anygrid-table-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--background-dark));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.anygrid-table-wrapper.scrolled::after {
+    opacity: 1;
+}
+
+/* ==================================================== */
+/* TABLE STYLING - DESKTOP                              */
+/* ==================================================== */
+
+.anygrid-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    min-width: 100%; /* Force table to be at least as wide as container */
+    table-layout: auto; /* Allow columns to adjust to content */
+}
+
+.anygrid-table th,
+.anygrid-table td {
+    border: none;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    min-width: 120px; /* Minimum column width */
+    max-width: 200px; /* Maximum column width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Make first column sticky on horizontal scroll */
+.anygrid-table th:first-child,
+.anygrid-table td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: var(--input-background);
+    z-index: 5;
+    min-width: 80px; /* Smaller min-width for ID column */
+}
+
+/* Fix background colors for sticky first column in table body */
+.anygrid-table tbody tr td:first-child {
+    background-color: var(--background-dark);
+}
+
+.anygrid-table tbody tr:nth-child(even) td:first-child {
+    background-color: var(--background-light);
+}
+
+/* Ensure sticky header row */
+.anygrid-table thead tr {
+    background-color: var(--input-background);
+    color: var(--text-light);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.anygrid-table th {
+    font-weight: 600;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.anygrid-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.anygrid-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.anygrid-table tbody tr:nth-child(even) {
+    background-color: var(--background-light);
+}
+
+.anygrid-table tbody tr:hover {
+    background-color: var(--button-background-hover);
+    color: var(--text-contrast);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--button-background-hover);
+    text-decoration: underline;
+}
+
+/* ==================================================== */
+/* TOP ACTIONS - SEARCH, ITEMS PER PAGE, EXPORT         */
+/* ==================================================== */
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--background-dark);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+}
+
+/* Standard input and select styles */
+input.anygrid-search-input,
+select.items-per-page {
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.875rem;
+    padding: 0.6rem 0.8rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    height: 2.5rem;
+    line-height: 1.5;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239CA3AF'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+}
+
+input.anygrid-search-input {
+    max-width: 18rem;
+    color: var(--text-light);
+}
+
+input.anygrid-search-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
+}
+
+input.anygrid-search-input::placeholder {
+    color: var(--label-color);
+    opacity: 0.7;
+}
+
+select.items-per-page {
+    color: var(--text-light);
+    max-width: 10rem;
+}
+
+select.items-per-page:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
+}
+
+/* CSV & Excel Export Buttons */
+.anygrid-export-csv,
+.anygrid-export-excel {
+    background-color: var(--button-background);
+    color: var(--text-contrast);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 2px 0 var(--shadow-color);
+}
+
+.anygrid-export-csv::before,
+.anygrid-export-excel::before {
+    content: "↓";
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.anygrid-export-csv:hover,
+.anygrid-export-excel:hover {
+    background-color: var(--button-background-hover);
+    border-color: var(--button-background-hover);
+    box-shadow: 0 2px 4px 0 var(--shadow-color);
+}
+
+.anygrid-export-csv:disabled,
+.anygrid-export-excel:disabled {
+    background-color: var(--input-background-disabled);
+    color: var(--label-color);
+    cursor: not-allowed;
+    border-color: var(--border-color);
+    box-shadow: none;
+}
+
+.anygrid-export-csv:focus,
+.anygrid-export-excel:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
+}
+
+/* ==================================================== */
+/* PAGINATION                                            */
+/* ==================================================== */
+
+.pagination-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: var(--background-dark);
+    border-top: 1px solid var(--border-color);
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pagination-info {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.pagination-button {
+    background-color: var(--button-background);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-contrast);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px 0 var(--shadow-color);
+}
+
+.pagination-button.active {
+    background-color: var(--primary-color);
+    color: var(--text-contrast);
+    box-shadow: 0 4px 8px 0 rgba(var(--primary-color-rgb), 0.3);
+    transform: translateY(-1px);
+}
+
+.pagination-button:hover:not(.active) {
+    background-color: var(--button-background-hover);
+    color: var(--text-contrast);
+    box-shadow: 0 3px 6px 0 var(--shadow-color);
+    transform: translateY(-1px);
+}
+
+.pagination-button:disabled {
+    background-color: var(--input-background-disabled);
+    color: var(--label-color);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.pagination-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
+}
+
+/* ==================================================== */
+/* ACTION BUTTONS                                       */
+/* ==================================================== */
+
+.edit,
+.delete {
+    border-radius: 0.375rem;
+    padding: 0.4rem 0.75rem;
+    color: var(--text-contrast);
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 2px 0 var(--shadow-color);
+}
+
+.edit {
+    background-color: var(--edit-background);
+}
+
+.delete {
+    background-color: var(--delete-background);
+}
+
+.edit:hover {
+    background-color: color-mix(in srgb, var(--edit-background) 80%, black);
+    box-shadow: 0 2px 4px 0 var(--shadow-color);
+}
+
+.delete:hover {
+    background-color: color-mix(in srgb, var(--delete-background) 80%, black);
+    box-shadow: 0 2px 4px 0 var(--shadow-color);
+}
+
+.edit::before {
+    content: '✎';
+}
+
+.delete::before {
+    content: '🗑';
+}
+
+/* ==================================================== */
+/* SORTABLE COLUMNS                                     */
+/* ==================================================== */
+
+.anygrid-column-sortable {
+    cursor: pointer;
+    position: relative;
+}
+
+.anygrid-column-sortable:hover::after {
+    opacity: 1;
+}
+
+.anygrid-column-sortable.asc::after {
+    content: '↑';
+    opacity: 1;
+}
+
+.anygrid-column-sortable.desc::after {
+    content: '↓';
+    opacity: 1;
+}
+
+/* ==================================================== */
+/* STATUS BADGES                                        */
+/* ==================================================== */
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.status-active {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2E7D32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.status-inactive {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* ==================================================== */
+/* CUSTOM SCROLLBAR STYLING                             */
+/* ==================================================== */
+
+.anygrid-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.anygrid-table-wrapper::-webkit-scrollbar-track {
+    background: var(--background-light);
+    border-radius: 4px;
+}
+
+.anygrid-table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.anygrid-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+.anygrid-table-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--background-light);
+}
+
+/* ==================================================== */
+/* MOBILE RESPONSIVE STYLES (768px and below)           */
+/* ==================================================== */
+
+@media (max-width: 768px) {
+    /* Mobile search container */
+    .search-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    input.anygrid-search-input,
+    select.items-per-page,
+    .anygrid-export-csv,
+    .anygrid-export-excel {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+
+    input.anygrid-search-input,
+    select.items-per-page {
+        max-width: 100% !important;
+        text-align: left;
+        font-size: 1rem;
+    }
+
+    input.anygrid-search-input::placeholder {
+        text-align: left;
+    }
+    
+    select.items-per-page option {
+        text-align: left;
+    }
+
+    .anygrid-export-csv,
+    .anygrid-export-excel {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .anygrid-export-csv {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Hide horizontal scrolling wrapper on mobile */
+    .anygrid-table-wrapper {
+        overflow-x: hidden;
+        overflow-y: visible;
+    }
+    
+    /* Reset table layout for mobile */
+    .anygrid-table,
+    .anygrid-table tbody,
+    .anygrid-table tr,
+    .anygrid-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        min-width: unset;
+        max-width: unset;
+        white-space: normal;
+    }
+    
+    /* Hide table headers */
+    .anygrid-table thead {
+        display: none;
+    }
+    
+    /* Style each row as a card */
+    .anygrid-table tbody tr {
+        margin-bottom: 1rem;
+        padding: 1.25rem;
+        background-color: var(--background-light);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 8px 0 var(--shadow-color);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        transition: all 0.25s ease;
+    }
+    
+    /* Remove alternating row colors on mobile */
+    .anygrid-table tbody tr:nth-child(even) {
+        background-color: var(--background-light);
+    }
+    
+    /* Hover effect for cards */
+    .anygrid-table tbody tr:hover {
+        background-color: var(--button-background);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px 0 var(--shadow-color);
+    }
+    
+    /* Style each cell as a field within the card - RIGHT ALIGNED */
+    .anygrid-table td {
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.15);
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
+        text-align: right;
+        display: block;
+        position: relative;
+    }
+    
+    /* Remove border from last cell */
+    .anygrid-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    
+    /* Style the cell content - RIGHT ALIGNED */
+    .anygrid-table td > * {
+        width: 100%;
+        word-break: break-word;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        color: var(--text-light);
+        text-align: right;
+    }
+    
+    /* Style links within cells */
+    .anygrid-table td a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+        text-align: right;
+        width: auto;
+    }
+    
+    .anygrid-table td a:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+    }
+    
+    /* Style strong elements within cells */
+    .anygrid-table td strong {
+        color: var(--secondary-color);
+        font-weight: 600;
+        text-align: right;
+    }
+    
+    /* Status badges on mobile */
+    .status-badge {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+        margin-left: auto;
+    }
+    
+    /* Action buttons styling - right aligned */
+    .anygrid-table td .edit,
+    .anygrid-table td .delete {
+        margin-left: auto;
+        margin-right: 0;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Stack action buttons */
+    .anygrid-table td .edit + .delete {
+        margin-left: 0.5rem;
+        margin-top: 0.25rem;
+        display: inline-flex;
+    }
+    
+    /* Reset sticky positioning on mobile */
+    .anygrid-table th:first-child,
+    .anygrid-table td:first-child {
+        position: static;
+        background-color: unset;
+        min-width: unset;
+    }
+    
+    /* Reset sticky header on mobile */
+    .anygrid-table thead tr {
+        position: static;
+    }
+    
+    /* Hide sort indicators on mobile */
+    .anygrid-column-sortable {
+        display: none;
+    }
+    
+    /* Adjust container for mobile */
+    .anygrid-container {
+        margin: 0.75rem auto;
+        max-width: 100%;
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+    }
+    
+    /* Adjust pagination for mobile */
+    .pagination-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .pagination-buttons {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .pagination-button {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 0.875rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .pagination-info {
+        text-align: center;
+    }
+}
+
+/* ==================================================== */
+/* VERY SMALL SCREENS (480px and below)                 */
+/* ==================================================== */
+
+@media (max-width: 480px) {
+    .anygrid-table tbody tr {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        gap: 0.5rem;
+    }
+    
+    .anygrid-table td {
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .anygrid-table td > * {
+        font-size: 0.875rem;
+    }
+    
+    /* Stack buttons horizontally when in same cell */
+    .anygrid-table td .edit + .delete {
+        margin-left: 0.5rem;
+        margin-top: 0;
+    }
+    
+    /* Adjust container padding */
+    .anygrid-container {
+        padding: 0.5rem;
+    }
+    
+    /* Adjust pagination buttons */
+    .pagination-button {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 0.8125rem;
+    }
+}
+
+/* ==================================================== */
+/* MEDIA QUERIES FOR DIFFERENT DESKTOP SIZES            */
+/* ==================================================== */
+
+/* Small desktop/laptop */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .anygrid-container {
+        max-width: 98%;
+    }
+    
+    .anygrid-table th,
+    .anygrid-table td {
+        min-width: 100px;
+        max-width: 180px;
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+/* Large desktop */
+@media (min-width: 1025px) {
+    .anygrid-container {
+        max-width: 90%;
+    }
+    
+    .anygrid-table th,
+    .anygrid-table td {
+        min-width: 140px;
+        max-width: 220px;
+    }
+}
+
+/* Very large desktop */
+@media (min-width: 1440px) {
+    .anygrid-container {
+        max-width: 85%;
+    }
+    
+    .anygrid-table th,
+    .anygrid-table td {
+        min-width: 150px;
+        max-width: 250px;
+    }
+}
+
+/* ==================================================== */
+/* MODAL CSS                                            */
+/* ==================================================== */
+
+.anygrid-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    color: #333333;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    z-index: 1001;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid #cccccc;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+}
+
+.modal-body {
+    padding: 1.5rem 0;
+}
+
+.modal-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #cccccc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.record-field {
+    display: flex;
+    margin-bottom: 1.25rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.record-field strong,
+.record-field label {
+    flex: 0 0 150px;
+    font-weight: 600;
+    color: #5a2d81;
+    padding-right: 1rem;
+}
+
+.record-field span {
+    flex: 1;
+    word-break: break-word;
+    color: #333333;
+}
+
+.record-field.non-editable {
+    background-color: #f5f5f5;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.record-field.non-editable strong,
+.record-field.non-editable span {
+    color: #8a8787;
+    opacity: 0.8;
+}
+
+.record-field:not(.non-editable) {
+    cursor: pointer;
+}
+
+.record-field input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cccccc;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background-color: #ffffff;
+    color: #333333;
+    transition: all 0.2s;
+}
+
+.record-field input:focus {
+    border-color: #4f4d4d;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 77, 77, 0.25);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: #5a2d81;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #333333;
+}
+
+.anygrid-btn-delete,
+.btn-save,
+.retry-btn {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(79, 77, 77, 0.1);
+}
+
+.anygrid-btn-delete,
+.retry-btn {
+    background-color: #dc3545;
+}
+
+.btn-save {
+    background-color: #8a8787;
+}
+
+.anygrid-btn-delete:hover,
+.retry-btn:hover {
+    background-color: #c82333;
+    box-shadow: 0 2px 4px 0 rgba(79, 77, 77, 0.1);
+}
+
+.btn-save:hover {
+    background-color: #666666;
+    box-shadow: 0 2px 4px 0 rgba(79, 77, 77, 0.1);
+}
+
+.anygrid-modal.fade .modal-content {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.anygrid-modal.slide .modal-content {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translate(-50%, -40px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+.modal-status {
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.modal-status.loading {
+    background: rgba(79, 77, 77, 0.1);
+    color: #4f4d4d;
+}
+
+.modal-status.success {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.modal-status.error {
+    background: #fce8e6;
+    color: #d93025;
+}
+
+.delete-confirmation,
+.delete-error {
+    text-align: center;
+    padding: 2.5rem;
+    font-size: 1rem;
+}
+
+.delete-confirmation {
+    color: #137333;
+}
+
+.delete-error {
+    color: #d93025;
+}
+
+.checkmark,
+.crossmark {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 2rem;
+    display: block;
+}
+
+.checkmark circle {
+    stroke: #4CAF50;
+    stroke-width: 2.5;
+}
+
+.checkmark path {
+    stroke: #4CAF50;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    animation: checkmark 0.6s ease-in-out forwards;
+}
+
+.crossmark circle {
+    stroke: #F44336;
+    stroke-width: 2.5;
+}
+
+.crossmark path {
+    stroke: #F44336;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    animation: crossmark 0.6s ease-in-out forwards;
+}
+
+@keyframes checkmark {
+    0% {
+        stroke-dashoffset: 100px;
+        stroke-dasharray: 100px;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 100px;
+    }
+}
+
+@keyframes crossmark {
+    0% {
+        stroke-dashoffset: 100px;
+        stroke-dasharray: 100px;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 100px;
+    }
+}
+
+/* ==================================================== */
+/* ROW STATES                                           */
+/* ==================================================== */
+
+.row-deleting {
+    animation: pulseWarning 0.8s infinite alternate;
+}
+
+.row-updated {
+    animation: highlightUpdate 2s ease-out;
+}
+
+@keyframes pulseWarning {
+    from {
+        background-color: var(--background-dark);
+    }
+    to {
+        background-color: color-mix(in srgb, var(--delete-background) 15%, var(--background-dark));
+    }
+}
+
+@keyframes highlightUpdate {
+    from {
+        background-color: color-mix(in srgb, var(--primary-color) 15%, var(--background-dark));
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
+/* ==================================================== */
+/* GENERAL UTILITIES                                    */
+/* ==================================================== */
+
+.anygrid-table td * {
+    max-width: 100%;
+}
+
+.anygrid-table tbody tr {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}`;
+
+
+
 class AnyGrid {
   constructor(data, columns, options = {}) {
+    // Inject styles unless disabled
+    if (!options.disableStyles) {
+      this._injectStyles();
+    }
+    
     this.data = data;
     this.dataApiEndPoint = options.dataApiEndPoint || null;
     this.totalRecords = data.length;
@@ -17,6 +1352,7 @@ class AnyGrid {
     this.searchInputId = this.generateUniqueId('search-input');
     this.itemsPerPageId = this.generateUniqueId('items-per-page');
     this.gridContainerId = options.gridContainerId || 'anygrid';
+    this.disableStyles = options.disableStyles || false;
 
     // AnyGrid Default Settings
     const defaultFeatures = {
@@ -28,7 +1364,7 @@ class AnyGrid {
       itemsPerPage: true,
       dynamicHeaders: true,
       mode: 'datagrid',
-      theme: 'default',
+      theme: 'light',
       initialItemsPerPage: 10,
       
       // Modal Features
@@ -68,15 +1404,15 @@ class AnyGrid {
       }
     }
 
-    // Apply theme
+    // Apply theme (updated - no longer fetches external CSS)
     if (options.themeColor) {
       this.applyDynamicTheme(options.themeColor, this.gridContainerId);
     } else if (this.features.theme) {
       let theme = this.features.theme;
-      if (theme === 'dark') theme = 'default';
+      //if (theme === 'light') theme = 'default';
       this.applyTheme(theme, this.gridContainerId);
     } else {
-      this.applyTheme('dark', this.gridContainerId);
+      this.applyTheme('default', this.gridContainerId);
     }
 
     // Edit state for modal
@@ -97,15 +1433,85 @@ class AnyGrid {
           this._handleDeleteRecord();
         });
       }
-
-
     }
-    }
+  }
   
   // CLOSE CONSTRUCTOR HERE
 
 
-applyDynamicTheme(color, gridContainerId) {
+ // Method to inject CSS into the page
+  _injectStyles() {
+    // Check if styles are already injected
+    if (document.getElementById('anygrid-styles')) {
+      return;
+    }
+    
+    // Create style element
+    const styleElement = document.createElement('style');
+    styleElement.id = 'anygrid-styles';
+    styleElement.textContent = ANYGRID_CSS;
+    
+    // Insert at the beginning of head to ensure it loads first
+    document.head.insertBefore(styleElement, document.head.firstChild);
+  }
+
+
+
+  // UPDATED: Theme application methods
+applyTheme(theme, gridContainerId) {
+  // Get injected anyGrid styles
+  const stylesheet = document.getElementById('anygrid-styles');
+
+  if (!stylesheet) {
+    console.error("Injected anyGrid styles not found (id='anygrid-styles')");
+    return;
+  }
+
+  // Read CSS directly from <style>
+  const cssText = stylesheet.textContent;
+
+  // Extract theme-specific CSS rules
+  const themeRules = cssText.match(
+    new RegExp(`\\.${theme}-theme\\s*{([^}]*)}`, 'i')
+  );
+
+  if (!themeRules) {
+    console.error(`Theme rules for '${theme}' not found in injected styles.`);
+    return;
+  }
+
+  const themeCSS = themeRules[1].trim();
+  const gridContainer = document.getElementById(gridContainerId);
+
+  if (!gridContainer) {
+    console.error(`Grid container with ID '${gridContainerId}' not found.`);
+    return;
+  }
+
+  // Apply theme class
+  gridContainer.classList.add(`${theme}-theme`);
+
+  // Inject scoped override style
+  const scopedStyleId = `anygrid-theme-${gridContainerId}`;
+
+  // Prevent duplicate theme injection
+  if (!document.getElementById(scopedStyleId)) {
+    const clonedStyle = document.createElement('style');
+    clonedStyle.id = scopedStyleId;
+    clonedStyle.textContent = `
+      #${gridContainerId} {
+        ${themeCSS}
+      }
+    `;
+
+    gridContainer.parentNode.insertBefore(clonedStyle, gridContainer);
+  }
+
+  console.log(`Applied '${theme}' theme to grid container: ${gridContainerId}`);
+}
+
+  // UPDATED: Dynamic theme application
+  applyDynamicTheme(color, gridContainerId) {
     const gridContainer = document.getElementById(gridContainerId);
     if (!gridContainer) {
       console.error(`Grid container with ID '${gridContainerId}' not found.`);
@@ -208,6 +1614,7 @@ applyDynamicTheme(color, gridContainerId) {
       ? `rgb(${r}, ${g}, ${b})`
       : `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
+
 
 // ========================
 // MODAL METHODS (SEQUENTIAL ORDER)
@@ -505,12 +1912,14 @@ _hideModal() {
           ${exportButtonHTML} ${exportExcelButtonHTML}
         </div>
         
+        <div class="anygrid-table-wrapper">
         <table class="anygrid-table" id="${this.dataTableId}">
           <thead>
             <tr></tr>
           </thead>
           <tbody></tbody>
         </table>
+        </div>
         ${this.features.pagination ? `<div id="${this.paginationContainerId}" class="anygrid-pagination"></div>` : ''}
       `;
 
@@ -820,52 +2229,6 @@ searchTable() {
 }
 
 
-
-applyTheme(theme, gridContainerId) {
-  // Find the stylesheet link referencing anyGrid.css
-  const stylesheet = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
-    .find(link => link.href.includes('anyGrid.css'));
-
-  if (!stylesheet) {
-    console.error("Stylesheet referencing 'anyGrid.css' not found!");
-    return; // Exit this function gracefully — no fatal error
-  }
-
-  fetch(stylesheet.href)
-    .then(response => response.text())
-    .then(cssText => {
-      // Extract theme-specific CSS rules
-      const themeRules = cssText.match(new RegExp(`\\.${theme}-theme\\s*{([^}]*)}`, 'i'));
-
-      if (!themeRules) {
-        console.error(`Theme rules for '${theme}' not found in the stylesheet.`);
-        return;
-      }
-
-      const themeCSS = themeRules[1].trim();
-      const gridContainer = document.getElementById(gridContainerId);
-
-      if (gridContainer) {
-        gridContainer.classList.add(`${theme}-theme`);
-
-        const clonedStyle = document.createElement('style');
-        clonedStyle.textContent = `
-          #${gridContainerId} {
-            ${themeCSS}
-          }
-        `;
-
-        gridContainer.parentNode.insertBefore(clonedStyle, gridContainer);
-
-        console.log(`Applied '${theme}' theme to grid container: ${gridContainerId}`);
-      } else {
-        console.error(`Grid container with ID '${gridContainerId}' not found.`);
-      }
-    })
-    .catch(error => {
-      console.error('Error loading the stylesheet:', error);
-    });
-}
 
 
 
