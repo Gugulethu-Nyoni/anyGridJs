@@ -53,6 +53,7 @@ While the library is built for the Semantq JS Framework - AnyGrid is framework a
     * **Custom Column Display**: Choose precisely which columns from your form data to display in the grid.
     * **Joinable Columns**: Combine data from multiple columns (e.g., `name` and `surname` rendered as `fullName`) for enhanced readability and visualization.
     * **Custom Rendering**: Deploy custom JavaScript functions or inject HTML directly into data rendering, allowing for highly flexible and dynamic cell content.
+    * Editing and deleting records
 
 ### Customization & Theming
 

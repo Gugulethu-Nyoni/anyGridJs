@@ -193,11 +193,16 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
 }
 
 /* Table wrapper for horizontal scrolling */
+/* Table wrapper for scrolling */
 .anygrid-table-wrapper {
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: auto;
     width: 100%;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    max-height: 70vh;
+    scroll-behavior: smooth;
+    position: relative;
 }
 
 
@@ -286,14 +291,16 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
 
 .anygrid-table {
     width: 100%;
+    min-width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.875rem;
     background-color: var(--background-dark);
     color: var(--text-light);
-    min-width: 100%; /* Force table to be at least as wide as container */
-    table-layout: auto; /* Allow columns to adjust to content */
+    table-layout: auto;
 }
+
 
 .anygrid-table th,
 .anygrid-table td {
@@ -882,11 +889,16 @@ select.items-per-page:focus {
     
     /* Adjust container for mobile */
     .anygrid-container {
-        margin: 0.75rem auto;
-        max-width: 100%;
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-    }
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+    background-color: var(--background-dark);
+    margin: 1rem auto;
+    max-width: 95%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
     
     /* Adjust pagination for mobile */
     .pagination-wrapper {
@@ -1325,7 +1337,17 @@ select.items-per-page:focus {
 
 .anygrid-table tbody tr {
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}`;
+}
+
+/* Constrain AnyGrid inside accordion content */
+.sqm-acc-content .anygrid-container,
+.sqm-acc-content .anygrid-table-wrapper,
+.sqm-acc-content .anygrid-table {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+`;
 
 
 
