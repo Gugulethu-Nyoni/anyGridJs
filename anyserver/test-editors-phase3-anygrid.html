@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnyGrid Phase 3 — JSON & Array Editors</title>
+
+  <link rel="stylesheet" href="./anyGrid.css" />
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .test-shell {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #b56ef0;
+    }
+
+    .intro {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .status {
+      margin: 20px 0;
+      padding: 12px 16px;
+      border-radius: 6px;
+      background: #e3f2fd;
+      color: #0d47a1;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .status.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status.error {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .test-record {
+      margin-top: 25px;
+    }
+
+    .api-log {
+      margin-top: 30px;
+      padding: 15px;
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      max-height: 350px;
+      overflow: auto;
+    }
+
+    .test-note {
+      margin-top: 20px;
+      padding: 14px 16px;
+      background: #fff8e1;
+      border-left: 4px solid #f0ad4e;
+      border-radius: 4px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="test-shell">
+    <h1>Phase 3 Editor Integration Test</h1>
+
+    <p class="intro">
+      This page exercises AnyGrid's ESM editor registry against synthetic data.
+      No Prisma schema, Resident API, or backend persistence is required.
+    </p>
+
+    <div id="status" class="status">
+      Initialising Phase 3 editor test...
+    </div>
+
+    <div class="test-note">
+      <strong>Test:</strong>
+      Open the row and edit JSON, Tags, Number[], Boolean[], and Enum[].
+      Press <strong>Enter</strong> or move outside the active field.
+      Both should trigger the same field-level persistence lifecycle.
+    </div>
+
+    <div id="anygrid" class="test-record"></div>
+
+    <div class="api-log" id="api-log">
+      Waiting for editor activity...
+    </div>
+  </div>
+
+  <script type="module">
+    import AnyGrid from './anygrid-patch.js';
+
+    const status = document.getElementById('status');
+    const apiLog = document.getElementById('api-log');
+
+    function log(message, payload = null) {
+      const line = `[${new Date().toLocaleTimeString()}] ${message}`;
+
+      if (payload !== null) {
+        apiLog.textContent =
+          line +
+          '\\n' +
+          JSON.stringify(payload, null, 2) +
+          '\\n\\n' +
+          apiLog.textContent;
+      } else {
+        apiLog.textContent = line + '\\n\\n' + apiLog.textContent;
+      }
+
+      console.log(message, payload);
+    }
+
+    const testData = [
+      {
+        id: 1,
+        name: 'Phase 3 Test Record',
+
+        tags: [
+          'priority',
+          'urgent',
+          'customer'
+        ],
+
+        scores: [
+          85,
+          92,
+          78
+        ],
+
+        flags: [
+          true,
+          false,
+          true
+        ],
+
+        statuses: [
+          'ACTIVE',
+          'PENDING'
+        ],
+
+        metadata: {
+          priority: 'high',
+          source: 'web',
+          flags: {
+            featured: true,
+            published: false
+          },
+          settings: {
+            timeout: 30,
+            retries: 3
+          }
+        }
+      }
+    ];
+
+    const columns = [
+      {
+        name: 'id',
+        header: 'ID',
+        sortable: true
+      },
+      {
+        name: 'name',
+        header: 'Name',
+        sortable: true
+      },
+      {
+        name: 'tags',
+        header: 'Tags',
+        sortable: false,
+        render: value =>
+          Array.isArray(value)
+            ? value.join(', ')
+            : ''
+      },
+      {
+        name: 'scores',
+        header: 'Scores',
+        sortable: false,
+        render: value =>
+          Array.isArray(value)
+            ? value.join(', ')
+            : ''
+      },
+      {
+        name: 'flags',
+        header: 'Flags',
+        sortable: false,
+        render: value =>
+          Array.isArray(value)
+            ? value.map(Boolean).map(v => v ? 'true' : 'false').join(', ')
+            : ''
+      },
+      {
+        name: 'statuses',
+        header: 'Statuses',
+        sortable: false,
+        render: value =>
+          Array.isArray(value)
+            ? value.join(', ')
+            : ''
+      },
+      {
+        name: 'metadata',
+        header: 'Metadata',
+        sortable: false,
+        render: value =>
+          value
+            ? JSON.stringify(value)
+            : ''
+      }
+    ];
+
+    const fieldMetadata = {
+      fields: {
+        name: {
+          editor: {
+            type: 'text',
+            required: true
+          }
+        },
+
+        tags: {
+          editor: {
+            type: 'tags',
+            placeholder: 'Add tag...'
+          }
+        },
+
+        scores: {
+          editor: {
+            type: 'array',
+            itemType: 'number',
+            label: 'Scores'
+          }
+        },
+
+        flags: {
+          editor: {
+            type: 'array',
+            itemType: 'boolean',
+            label: 'Flags'
+          }
+        },
+
+        statuses: {
+          editor: {
+            type: 'array',
+            itemType: 'enum',
+            label: 'Statuses',
+            options: [
+              {
+                value: 'PENDING',
+                label: 'Pending'
+              },
+              {
+                value: 'ACTIVE',
+                label: 'Active'
+              },
+              {
+                value: 'COMPLETED',
+                label: 'Completed'
+              },
+              {
+                value: 'DISCHARGED',
+                label: 'Discharged'
+              }
+            ]
+          }
+        },
+
+        metadata: {
+          editor: {
+            type: 'json',
+            mode: 'structured'
+          }
+        }
+      }
+    };
+
+    /*
+     * Synthetic persistence endpoint.
+     *
+     * AnyGrid still executes its normal PUT lifecycle.
+     * We intercept the request so this page can exercise the
+     * complete editor/persistence state machine without a backend.
+     */
+    const originalFetch = window.fetch.bind(window);
+
+    window.fetch = async (url, options = {}) => {
+      if (
+        typeof url === 'string' &&
+        url.includes('/phase3-test/records/')
+      ) {
+        const body = options.body
+          ? JSON.parse(options.body)
+          : null;
+
+        log(`PUT ${url}`, body);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            data: {
+              id: 1,
+              ...body
+            }
+          }),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      }
+
+      return originalFetch(url, options);
+    };
+
+    const grid = new AnyGrid(
+      testData,
+      columns,
+      {
+        initialItemsPerPage: 10,
+
+        fieldMetadata,
+
+        gridModal: true,
+
+        modalConfig: {
+          editable: true,
+          deletable: false,
+          hiddenFields: [
+            'id'
+          ],
+          nonEditableFields: [
+            'id'
+          ]
+        },
+
+        dataApiEndPoint:
+          'http://localhost:8081/phase3-test/records',
+
+        theme: 'light'
+      }
+    );
+
+    status.className = 'status success';
+    status.textContent =
+      'Phase 3 editors loaded successfully. Open the row to begin testing.';
+
+    window.__phase3Test = {
+      grid,
+      testData,
+      fieldMetadata,
+      columns
+    };
+  </script>
+</body>
+</html>

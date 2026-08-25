@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyGrid + Metadata Editor Integration</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-container {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { color: #b56ef0; }
+    h2 { color: #555; font-size: 16px; margin-top: 20px; }
+    .status-bar {
+      padding: 10px 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .status-bar.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+    .status-bar.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+    .status-bar.info {
+      background: #e3f2fd;
+      color: #0d47a1;
+      border: 1px solid #90caf9;
+    }
+    #anygrid {
+      margin-top: 20px;
+      min-height: 300px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #b56ef0;
+      color: white;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>📊 AnyGrid + Metadata Editor Integration</h1>
+    <p>Testing <span class="badge">fieldMetadata</span>-driven editing against the Resident API</p>
+
+    <div id="status-messages"></div>
+
+    <h2>📋 Resident Collection</h2>
+    <div id="anygrid"></div>
+
+    <h2>📝 Test Instructions</h2>
+    <ol style="font-size:14px; color:#555; line-height:1.8;">
+      <li><strong>Open a row</strong> — Click any row to open the modal</li>
+      <li><strong>Click a field</strong> — The correct editor should appear:
+        <ul>
+          <li><code>firstName</code> → <span style="color:#b56ef0;">TextEditor</span></li>
+          <li><code>organizationId</code> → <span style="color:#b56ef0;">NumberEditor</span></li>
+          <li><code>status</code> → <span style="color:#b56ef0;">SelectEditor</span></li>
+          <li><code>dateOfBirth</code> → <span style="color:#b56ef0;">DateTimeEditor</span></li>
+        </ul>
+      </li>
+      <li><strong>Edit and Save</strong> — Change a value, click "Save All Changes"</li>
+      <li><strong>Verify</strong> — The grid should update with the new value</li>
+    </ol>
+  </div>
+
+  <!-- Import Map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "/editors/": "/editors/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    // ============================================================
+    // 1. IMPORTS
+    // ============================================================
+    import AnyGrid from './anygrid-patch.js';
+    import { smQL } from './smQL.js';
+
+    // ============================================================
+    // 2. API CONFIGURATION
+    // ============================================================
+    const baseOrigin = 'http://localhost:3003';
+    const api = new smQL(baseOrigin);
+
+    // ============================================================
+    // 3. STATUS MESSAGES
+    // ============================================================
+    const statusContainer = document.getElementById('status-messages');
+
+    function showStatus(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `status-bar ${type}`;
+      div.textContent = message;
+      statusContainer.appendChild(div);
+      console.log(`[${type.toUpperCase()}]`, message);
+    }
+
+    // ============================================================
+    // 4. DECLARE VARIABLES IN CORRECT SCOPE
+    // ============================================================
+    let fieldMetadata;
+    let residentColumns;
+    let residentGrid;
+    let residentsData = [];
+
+    // ============================================================
+    // 5. FIELD METADATA (Editor Contract)
+    // ============================================================
+    fieldMetadata = {
+      fields: {
+        firstName: {
+          editor: {
+            type: 'text',
+            required: true,
+            placeholder: 'Enter first name'
+          }
+        },
+        lastName: {
+          editor: {
+            type: 'text',
+            required: true,
+            placeholder: 'Enter last name'
+          }
+        },
+        preferredName: {
+          editor: {
+            type: 'text',
+            required: false,
+            placeholder: 'Preferred name'
+          }
+        },
+        status: {
+          editor: {
+            type: 'select',
+            required: true,
+            options: [
+              { value: 'ACTIVE', label: 'Active' },
+              { value: 'INACTIVE', label: 'Inactive' },
+              { value: 'DISCHARGED', label: 'Discharged' }
+            ]
+          }
+        },
+        dateOfBirth: {
+          editor: {
+            type: 'datetime',
+            required: false
+          }
+        },
+        organizationId: {
+          editor: {
+            type: 'number',
+            required: true,
+            min: 1
+          }
+        },
+        externalRef: {
+          editor: {
+            type: 'text',
+            required: false,
+            placeholder: 'External reference'
+          }
+        }
+      }
+    };
+
+    // ============================================================
+    // 6. COLUMN DEFINITIONS
+    // ============================================================
+    residentColumns = [
+      {
+        name: 'id',
+        header: 'ID',
+        sortable: true
+      },
+      {
+        name: 'firstName',
+        header: 'First Name',
+        sortable: true
+      },
+      {
+        name: 'lastName',
+        header: 'Last Name',
+        sortable: true
+      },
+      {
+        name: 'preferredName',
+        header: 'Preferred Name',
+        sortable: true
+      },
+      {
+        name: 'status',
+        header: 'Status',
+        sortable: true,
+        render: (value) => value || '—'
+      },
+      {
+        name: 'dateOfBirth',
+        header: 'Date of Birth',
+        sortable: true,
+        render: (value) =>
+          value
+            ? new Date(value).toLocaleDateString()
+            : '—'
+      },
+      {
+        name: 'organizationId',
+        header: 'Organization',
+        sortable: true,
+        render: (value) => value || '—'
+      },
+      {
+        name: 'externalRef',
+        header: 'External Reference',
+        sortable: true
+      },
+      {
+        name: 'createdAt',
+        header: 'Created',
+        sortable: true,
+        render: (value) =>
+          value
+            ? new Date(value).toLocaleDateString()
+            : '—'
+      }
+    ];
+
+    // Add column override for status (tests metadata resolution)
+    const statusColumn = residentColumns.find(c => c.name === 'status');
+    if (statusColumn) {
+      statusColumn.editor = {
+        placeholder: 'Choose resident status'
+      };
+    }
+
+    // ============================================================
+    // 7. FETCH DATA FROM API - FIXED SUCCESS DETECTION
+    // ============================================================
+    showStatus('🔄 Fetching Resident data from API...', 'info');
+
+    try {
+      const response = await api.get('/resident/residents');
+      console.log('Raw Response:', response);
+
+      // FIX: Check _status === 200 AND _ok === true
+      if (response._status === 200 && response._ok === true) {
+        residentsData = api.getData(response);
+        showStatus(`✅ Loaded ${residentsData.length} real residents from API`, 'success');
+      } else {
+        // Only use mock data if API actually failed
+        const errorMsg = response.error?.message || response.message || 'Unknown error';
+        showStatus(`⚠️ API returned error (${errorMsg}), using mock data for testing`, 'error');
+        residentsData = [
+          { id: 1, firstName: 'Jane', lastName: 'Doe', preferredName: 'Janey', status: 'ACTIVE', dateOfBirth: '1990-05-15T00:00:00.000Z', organizationId: 1, externalRef: 'REF-001', createdAt: '2024-01-01T00:00:00.000Z' },
+          { id: 2, firstName: 'John', lastName: 'Smith', preferredName: null, status: 'INACTIVE', dateOfBirth: null, organizationId: 2, externalRef: 'REF-002', createdAt: '2024-01-02T00:00:00.000Z' },
+          { id: 3, firstName: 'Alice', lastName: 'Johnson', preferredName: 'Ali', status: 'ACTIVE', dateOfBirth: '1985-10-20T00:00:00.000Z', organizationId: 1, externalRef: null, createdAt: '2024-01-03T00:00:00.000Z' }
+        ];
+        showStatus(`📦 Using ${residentsData.length} mock residents`, 'info');
+      }
+
+      console.log('Extracted Data:', residentsData);
+
+      // Ensure we have data
+      if (!Array.isArray(residentsData) || residentsData.length === 0) {
+        showStatus('⚠️ No Resident data found. Using fallback data.', 'error');
+        residentsData = [
+          { id: 1, firstName: 'Jane', lastName: 'Doe', preferredName: 'Janey', status: 'ACTIVE', dateOfBirth: '1990-05-15T00:00:00.000Z', organizationId: 1, externalRef: 'REF-001', createdAt: '2024-01-01T00:00:00.000Z' }
+        ];
+      }
+
+      showStatus(`✅ Loaded ${residentsData.length} residents`, 'success');
+
+      console.log('AnyGrid field metadata:', fieldMetadata);
+
+      // ============================================================
+      // 8. INSTANTIATE ANYGRID
+      // ============================================================
+      residentGrid = new AnyGrid(
+        residentsData,
+        residentColumns,
+        {
+          gridContainerId: 'anygrid',
+          fieldMetadata: fieldMetadata,
+          initialItemsPerPage: 5,
+          gridModal: true,
+          modalConfig: {
+            editable: true,
+            deletable: true,
+            hiddenFields: [
+              'id',
+              'organizationId',
+              'createdAt',
+              'updatedAt'
+            ],
+            nonEditableFields: [
+              'id',
+              'organizationId',
+              'createdAt',
+              'updatedAt'
+            ]
+          },
+          dataApiEndPoint: `${baseOrigin}/resident/residents`,
+          theme: 'light'
+        }
+      );
+
+      showStatus('✅ AnyGrid initialized with metadata-driven editors', 'success');
+
+      // ============================================================
+      // 9. CONSOLE DIAGNOSTICS
+      // ============================================================
+      console.log('📊 Grid instance:', residentGrid);
+      console.log('📋 Field metadata:', fieldMetadata);
+      console.log('📋 Resident data:', residentsData);
+
+      // ============================================================
+      // 10. INSTRUCTIONS
+      // ============================================================
+      showStatus('ℹ️ Click any row to open modal, then click a field to edit', 'info');
+      showStatus('ℹ️ Test: firstName → TextEditor | organizationId → NumberEditor | status → SelectEditor | dateOfBirth → DateTimeEditor', 'info');
+
+    } catch (error) {
+      showStatus(`❌ Error: ${error.message}`, 'error');
+      console.error('Integration test failed:', error);
+    }
+
+    // ============================================================
+    // 11. EXPOSE FOR CONSOLE DEBUGGING
+    // ============================================================
+    window.__test = {
+      api,
+      baseOrigin,
+      grid: residentGrid,
+      fieldMetadata,
+      residentColumns,
+      residentsData
+    };
+  </script>
+</body>
+</html>

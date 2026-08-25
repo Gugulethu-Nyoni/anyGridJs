@@ -1335,7 +1335,7 @@ select.items-per-page:focus {
 
 
 
-
+import { resolveEditor } from './editors/index.js';
 
 class AnyGrid {
   constructor(data, columns, options = {}) {
@@ -1668,13 +1668,9 @@ _resolveEditor(editorType) {
  * Create and mount editor in field - uses currentRecord for raw value
  */
 _createAndMountEditor(fieldElement, metadata, EditorClass) {
-  if (fieldElement._editor) {
-    fieldElement._editor.focus();
-    return;
-  }
-
   const fieldName = fieldElement.dataset.field;
 
+  // Get value directly from currentRecord
   const currentValue = this.currentRecord
     ? this.currentRecord[fieldName]
     : null;
@@ -1683,11 +1679,7 @@ _createAndMountEditor(fieldElement, metadata, EditorClass) {
     value: currentValue,
     metadata: metadata.editor,
     onCommit: (newValue) => {
-      this._commitEditorValue(
-        fieldElement,
-        fieldName,
-        newValue
-      );
+      this._commitEditorValue(fieldElement, fieldName, newValue);
     }
   });
 
@@ -1697,154 +1689,15 @@ _createAndMountEditor(fieldElement, metadata, EditorClass) {
   wrapper.className = 'anygrid-editor-wrapper';
   wrapper.appendChild(editorElement);
 
-  // Enter commits the active field for all editor types.
-  // Textareas retain normal Enter/newline behaviour.
-  const handleEditorKeydown = (event) => {
-    if (event.key !== 'Enter') {
-      return;
-    }
-
-    if (event.target.tagName === 'TEXTAREA') {
-      return;
-    }
-
-    event.preventDefault();
-
-    const pendingValue =
-      this._editState?.pendingChanges?.[fieldName];
-
-    if (pendingValue !== undefined) {
-      this._saveSingleField(
-        fieldElement,
-        fieldName
-      );
-    }
-  };
-
-  wrapper.addEventListener(
-    'keydown',
-    handleEditorKeydown
-  );
-
-  const valueElement =
-    fieldElement.querySelector('.field-value');
-
-  if (!valueElement) {
-    console.warn(
-      `Field value element not found for "${fieldName}".`
-    );
-    return;
-  }
-
+  const valueElement = fieldElement.querySelector('.field-value');
   valueElement.replaceChildren(wrapper);
-
-  fieldElement._editor = editor;
-  fieldElement._editing = true;
-  fieldElement.dataset.editing = 'true';
-  fieldElement._editorWrapper = wrapper;
 
   setTimeout(() => {
     editor.focus();
-  }, 0);
+  }, 50);
 
-  wrapper.addEventListener('focusout', (event) => {
-    const nextTarget = event.relatedTarget;
-
-    // Focus is still inside this editor.
-    if (nextTarget && wrapper.contains(nextTarget)) {
-      return;
-    }
-
-    // Allow focus to move to the field-level Save button.
-setTimeout(() => {
-      if (!fieldElement.isConnected) return;
-      if (!fieldElement._editing) return;
-
-      this._handleEditorBlur(
-        fieldElement,
-        fieldName
-      );
-    }, 0);
-  });
+  fieldElement._editor = editor;
 }
-
-_handleEditorBlur(fieldElement, fieldName) {
-  const hasPending =
-    this._editState.pendingChanges[fieldName] !== undefined;
-
-  // Mark the editor as no longer active immediately so a second
-  // focusout/click cannot trigger another save while the request runs.
-  fieldElement._editing = false;
-
-  if (hasPending) {
-    this._saveSingleField(
-      fieldElement,
-      fieldName
-    );
-  } else {
-    fieldElement._editor = null;
-    fieldElement._editorWrapper = null;
-  }
-}
-
-/**
- * Save the active field when the user clicks/focuses
- * outside the field currently being edited.
- */
-_setupEditorOutsideClickSave() {
-  this._removeEditorOutsideClickSave();
-
-  this._editorOutsideClickHandler = (event) => {
-    const activeField = this.modalElement?.querySelector(
-      '.record-field[data-editing="true"]'
-    );
-
-    if (!activeField) {
-      return;
-    }
-
-    // Interaction remains inside the active field.
-    if (activeField.contains(event.target)) {
-      return;
-    }
-
-    const fieldName = activeField.dataset.field;
-
-    if (
-      this._editState?.pendingChanges &&
-      this._editState.pendingChanges[fieldName] !== undefined
-    ) {
-      this._saveSingleField(
-        activeField,
-        fieldName
-      );
-    }
-  };
-
-  document.addEventListener(
-    'pointerdown',
-    this._editorOutsideClickHandler,
-    true
-  );
-}
-
-/**
- * Remove the document-level editor outside-click handler.
- */
-_removeEditorOutsideClickSave() {
-  if (!this._editorOutsideClickHandler) {
-    return;
-  }
-
-  document.removeEventListener(
-    'pointerdown',
-    this._editorOutsideClickHandler,
-    true
-  );
-
-  this._editorOutsideClickHandler = null;
-}
-
 
 /**
  * Fallback editor when registry not available
@@ -1934,15 +1787,85 @@ _updateSaveButtonStatus() {
 /**
  * Show save icon on field when pending change exists
  */
+_updateCellSaveControl(fieldElement, fieldName) {
+  this._removeCellSaveControl(fieldElement);
+
+  const control = document.createElement('span');
+  control.className = 'cell-save-control';
+  control.dataset.field = fieldName;
+
+  const pendingBadge = document.createElement('span');
+  pendingBadge.className = 'cell-pending-badge';
+  pendingBadge.textContent = '•';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.className = 'cell-save-btn';
+  saveBtn.type = 'button';
+  saveBtn.title = 'Save this field';
+  saveBtn.setAttribute('aria-label', 'Save this field');
+
+  // Static SVG icon - safe to use innerHTML
+  saveBtn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+      <polyline points="7 3 7 8 15 8"/>
+    </svg>
+  `;
+
+  saveBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    this._saveSingleField(fieldElement, fieldName);
+  });
+
+  control.appendChild(pendingBadge);
+  control.appendChild(saveBtn);
+
+  fieldElement.appendChild(control);
+  fieldElement.classList.add('has-pending-change');
+  fieldElement._saveControl = control;
+}
+
 /**
  * Remove cell save control from field
  */
+_removeCellSaveControl(fieldElement) {
+  const existing = fieldElement.querySelector('.cell-save-control');
+  if (existing) {
+    existing.remove();
+    fieldElement.classList.remove('has-pending-change');
+    fieldElement.classList.remove('cell-saving');
+    fieldElement.classList.remove('cell-saved');
+    fieldElement.classList.remove('cell-error');
+  }
+  const errorMsg = fieldElement.querySelector('.cell-error-message');
+  if (errorMsg) errorMsg.remove();
+}
+
 /**
  * Disable all cell save buttons
  */
+_disableAllCellControls(disabled) {
+  const controls = this.modalElement?.querySelectorAll('.cell-save-btn');
+  if (controls) {
+    controls.forEach(btn => {
+      btn.disabled = disabled;
+    });
+  }
+}
+
 /**
  * Remove all cell save controls
  */
+_removeAllCellControls() {
+  const fields = this.modalElement?.querySelectorAll('.record-field.has-pending-change');
+  if (fields) {
+    fields.forEach(field => {
+      this._removeCellSaveControl(field);
+    });
+  }
+}
+
 /**
  * Extract meaningful error message from backend response
  * Handles error as string, object, or nested structures
@@ -2001,19 +1924,33 @@ _extractErrorMessage(error) {
  * Commit editor value - central state management
  */
 _commitEditorValue(fieldElement, fieldName, newValue) {
+  const column = this.columns?.find(c => c.name === fieldName);
+  let displayValue = newValue;
+
+  if (column?.render) {
+    displayValue = column.render(newValue, this.currentRecord);
+  } else {
+    displayValue = newValue !== null && newValue !== undefined ? String(newValue) : 'null';
+  }
+
+  const valueElement = fieldElement.querySelector('.field-value');
+  if (valueElement) {
+    valueElement.textContent = displayValue;
+  }
+
   if (this.currentRecord) {
     this.currentRecord[fieldName] = newValue;
   }
 
-  const originalValue =
-    this._editState.originalRecord?.[fieldName];
+  const originalValue = this._editState.originalRecord?.[fieldName];
+  const hasChanged = this._isValueChanged(originalValue, newValue);
 
-  if (this._isValueChanged(originalValue, newValue)) {
+  if (hasChanged) {
     this._editState.pendingChanges[fieldName] = newValue;
-    fieldElement.classList.add('has-pending-change');
+    this._updateCellSaveControl(fieldElement, fieldName);
   } else {
     delete this._editState.pendingChanges[fieldName];
-    fieldElement.classList.remove('has-pending-change');
+    this._removeCellSaveControl(fieldElement);
   }
 
   this._updateSaveButtonStatus();
@@ -2023,190 +1960,85 @@ _commitEditorValue(fieldElement, fieldName, newValue) {
  * Save a single field via PUT
  * Uses existing PUT endpoint with single-field payload
  */
-/**
- * Replace the active editor with the formatted display value
- * after successful persistence.
- */
-_replaceEditorWithDisplay(fieldElement, fieldName, value) {
-  const column =
-    this.columns?.find(column => column.name === fieldName);
-
-  let displayValue = value;
-
-  if (column?.render) {
-    displayValue = column.render(
-      value,
-      this.currentRecord
-    );
-  } else {
-    displayValue =
-      value !== null && value !== undefined
-        ? String(value)
-        : 'null';
-  }
-
-  const valueElement =
-    fieldElement.querySelector('.field-value');
-
-  if (valueElement) {
-    valueElement.textContent = displayValue;
-  }
-
-  // Clear editor lifecycle state only after persistence succeeds.
-  delete fieldElement.dataset.editing;
-
-  fieldElement._editor = null;
-  fieldElement._editorWrapper = null;
-  fieldElement._editing = false;
-}
-
-_showFieldStatus(
-  fieldElement,
-  status,
-  message = ''
-) {
-  const existing =
-    fieldElement.querySelector('.field-status');
-
-  if (existing) {
-    existing.remove();
-  }
-
-  const statusEl =
-    document.createElement('span');
-
-  statusEl.className =
-    `field-status field-status-${status}`;
-
-  if (status === 'saving') {
-    statusEl.textContent = 'Saving...';
-  }
-
-  if (status === 'saved') {
-    statusEl.textContent = '✓ Saved';
-    fieldElement.classList.add('cell-saved');
-
-    setTimeout(() => {
-      if (statusEl.isConnected) {
-        statusEl.remove();
-      }
-
-      fieldElement.classList.remove(
-        'has-pending-change',
-        'cell-saved'
-      );
-
-      delete fieldElement.dataset.editing;
-
-      fieldElement._editor = null;
-      fieldElement._editorWrapper = null;
-    }, 2000);
-  }
-
-  if (status === 'error') {
-    statusEl.textContent =
-      `✗ ${message || 'Unable to save this field.'}`;
-  }
-
-  const valueElement =
-    fieldElement.querySelector('.field-value');
-
-  if (valueElement) {
-    valueElement.after(statusEl);
-  } else {
-    fieldElement.appendChild(statusEl);
-  }
-}
-
 async _saveSingleField(fieldElement, fieldName) {
-  const valueToSave =
-    this._editState.pendingChanges[fieldName];
+  const value = this._editState.pendingChanges[fieldName];
 
-  if (valueToSave === undefined) {
+  if (value === undefined) {
     return;
   }
 
-  const existingStatus =
-    fieldElement.querySelector('.field-status');
-
-  if (existingStatus) {
-    existingStatus.remove();
+  // Show saving state
+  fieldElement.classList.add('cell-saving');
+  const saveBtn = fieldElement.querySelector('.cell-save-btn');
+  if (saveBtn) {
+    saveBtn.textContent = '⏳';
+    saveBtn.disabled = true;
   }
 
-  fieldElement.classList.add('cell-saving');
-
-  this._showFieldStatus(
-    fieldElement,
-    'saving'
-  );
+  // Remove any existing field error
+  const existingError = fieldElement.querySelector('.cell-error-message');
+  if (existingError) existingError.remove();
+  fieldElement.classList.remove('cell-error');
 
   try {
-    await this._recordUpdateApi(
-      { [fieldName]: valueToSave },
-      'PUT'
-    );
+    // Build payload - only this field
+    const payload = { [fieldName]: value };
+    
+    // Use existing PUT endpoint with single field
+    const result = await this._recordUpdateApi(payload, 'PUT');
 
-    const recordId =
-      this.currentRecord?.id;
+    // Success - update original record value
+    this._editState.originalRecord[fieldName] = value;
 
-    this._editState.originalRecord[fieldName] =
-      valueToSave;
-
+    // Update the main data collection
+    const recordId = this.currentRecord?.id;
     if (recordId) {
-      this._updateDataRecord(
-        recordId,
-        { [fieldName]: valueToSave }
-      );
+      this._updateDataRecord(recordId, { [fieldName]: value });
     }
 
-    /*
-     * Only clear the pending value if the user has not
-     * changed the field again while the request was running.
-     */
-    if (
-      this._editState.pendingChanges[fieldName] ===
-      valueToSave
-    ) {
-      delete this._editState.pendingChanges[fieldName];
+    // Remove from pending changes
+    delete this._editState.pendingChanges[fieldName];
+
+    // Show saved state
+    fieldElement.classList.remove('cell-saving');
+    fieldElement.classList.add('cell-saved');
+
+    if (saveBtn) {
+      saveBtn.textContent = '✓';
+      saveBtn.disabled = false;
     }
 
-    this._replaceEditorWithDisplay(
-      fieldElement,
-      fieldName,
-      valueToSave
-    );
-
-    fieldElement.classList.remove(
-      'cell-saving'
-    );
-
-    this._showFieldStatus(
-      fieldElement,
-      'saved'
-    );
-
-    this.renderData();
-
-    if (recordId) {
-      this._highlightUpdatedRow(recordId);
-    }
+    // Remove checkmark after 2 seconds
+    setTimeout(() => {
+      this._removeCellSaveControl(fieldElement);
+      fieldElement.classList.remove('cell-saved');
+    }, 2000);
 
     this._updateSaveButtonStatus();
 
   } catch (error) {
-    fieldElement.classList.remove(
-      'cell-saving'
-    );
+    // Failed - show granular error on field
+    fieldElement.classList.remove('cell-saving');
+    fieldElement.classList.add('cell-error');
 
-    this._showFieldStatus(
-      fieldElement,
-      'error',
-      this._extractErrorMessage(error)
-    );
+    const message = this._extractErrorMessage(error);
 
-    /*
-     * Keep pendingChanges intact so the user can retry.
-     */
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'cell-error-message';
+    errorMsg.textContent = message;
+    fieldElement.appendChild(errorMsg);
+
+    if (saveBtn) {
+      saveBtn.textContent = '↻';
+      saveBtn.disabled = false;
+    }
+
+    // Auto-dismiss error after 5 seconds
+    setTimeout(() => {
+      const err = fieldElement.querySelector('.cell-error-message');
+      if (err) err.remove();
+      fieldElement.classList.remove('cell-error');
+    }, 5000);
   }
 }
 
@@ -2282,24 +2114,6 @@ _setupRowClickHandlers() {
 /**
  * 3. Show modal with record data - UPDATED with metadata support
  */
-_formatModalValue(value) {
-  if (value === null || value === undefined) {
-    return 'null';
-  }
-
-  if (Array.isArray(value)) {
-    return value
-      .map(item => this._formatModalValue(item))
-      .join(', ');
-  }
-
-  if (typeof value === 'object') {
-    return JSON.stringify(value, null, 2);
-  }
-
-  return String(value);
-}
-
 _showModalWithData(record) {
   if (!this.modalElement) return;
   
@@ -2320,7 +2134,7 @@ _showModalWithData(record) {
         return `
           <div class="record-field" data-field="${key}" data-editable="${isEditable}">
             <strong>${key}:</strong>
-            <span class="field-value">${this._formatModalValue(value)}</span>
+            <span class="field-value">${value !== null && value !== undefined ? value : 'null'}</span>
           </div>
         `;
       }).join('');
@@ -2333,7 +2147,7 @@ _showModalWithData(record) {
       .map(([key, value]) => `
         <div class="record-field">
           <strong>${key}:</strong>
-          <span class="field-value">${this._formatModalValue(value)}</span>
+          <span>${value}</span>
         </div>
       `).join('');
   }
@@ -2344,7 +2158,6 @@ _showModalWithData(record) {
   }
 
   this._editState.originalRecord = {...record};
-  this._setupEditorOutsideClickSave();
   this._editState.pendingChanges = {};
 
   // Reset save button
@@ -2395,16 +2208,10 @@ _setupClickToEdit() {
     field.style.cursor = 'pointer';
     field._editorMetadata = metadata;
     
-  field.addEventListener('click', (e) => {
-    if (e.target.closest('input, select, textarea, button')) {
-      return;
-    }
-    if (!isEditable) return;
-    if (field._editor) {
-      return;
-    }
-    this._createAndMountEditor(field, metadata, EditorClass);
-  });
+    field.addEventListener('click', (e) => {
+      if (!isEditable || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+      this._createAndMountEditor(field, metadata, EditorClass);
+    });
   });
 }
 
@@ -2452,77 +2259,36 @@ _setupModalFooter() {
  * 6. Save all edits (footer button) - Batch save
  */
 _saveAllEdits() {
-  const changes = {
-    ...this._editState.pendingChanges
-  };
+  const changes = { ...this._editState.pendingChanges };
 
   if (Object.keys(changes).length === 0) {
-    this._showStatusMessage(
-      'No changes to save',
-      'info'
-    );
+    this._showStatusMessage('No changes to save', 'info');
     return;
   }
 
-  console.log(
-    'Saving all changes:',
-    changes
-  );
+  console.log('Saving all changes:', changes);
 
+  this._disableAllCellControls(true);
 
-  const saveBtn =
-    this.modalElement?.querySelector('.btn-save');
-
+  const saveBtn = this.modalElement?.querySelector('.btn-save');
   if (saveBtn) {
     saveBtn.textContent = 'Saving...';
     saveBtn.disabled = true;
   }
 
-  this._recordUpdateApi(
-    { ...changes },
-    'PUT'
-  )
+  this._recordUpdateApi({ ...changes }, 'PUT')
     .then(() => {
-      const recordId =
-        this.currentRecord?.id;
+      Object.keys(changes).forEach(key => {
+        this._editState.originalRecord[key] = changes[key];
+      });
 
-      // Update original values for what this request saved.
-      Object.entries(changes).forEach(
-        ([key, value]) => {
-          this._editState.originalRecord[key] =
-            value;
-        }
-      );
-
+      const recordId = this.currentRecord?.id;
       if (recordId) {
-        this._updateDataRecord(
-          recordId,
-          changes
-        );
+        this._updateDataRecord(recordId, changes);
       }
 
-      // Only clear pending values that still equal
-      // the values that this request saved.
-      Object.entries(changes).forEach(
-        ([key, savedValue]) => {
-          const currentPending =
-            this._editState.pendingChanges[key];
-
-          if (!this._isValueChanged(
-            savedValue,
-            currentPending
-          )) {
-            delete this._editState.pendingChanges[key];
-          }
-        }
-      );
-
-      if (
-        Object.keys(
-          this._editState.pendingChanges
-        ).length === 0
-      ) {
-        }
+      this._editState.pendingChanges = {};
+      this._removeAllCellControls();
 
       this._showSuccessMessage();
 
@@ -2532,30 +2298,25 @@ _saveAllEdits() {
         saveBtn.classList.add('btn-save-saved');
 
         setTimeout(() => {
-          saveBtn.classList.remove(
-            'btn-save-saved'
-          );
-
           this._updateSaveButtonStatus();
+          saveBtn.classList.remove('btn-save-saved');
         }, 2000);
       }
 
       this.renderData();
-
-      if (recordId) {
-        this._highlightUpdatedRow(recordId);
-      }
-
+      this._highlightUpdatedRow(this.currentRecord?.id);
+      this._disableAllCellControls(false);
     })
     .catch((error) => {
-      this._showErrorMessage(error);
+      const message = this._extractErrorMessage(error);
+      this._showErrorMessage(message);
 
       if (saveBtn) {
         saveBtn.textContent = 'Retry Save';
         saveBtn.disabled = false;
       }
-
-      // Preserve pending changes and cell controls.
+      this._disableAllCellControls(false);
+      // DO NOT remove cell controls on failure
     });
 }
 
@@ -2567,7 +2328,6 @@ _hideModal() {
   this.modalElement.style.display = 'none';
   document.body.style.overflow = '';
   this.currentRecord = null;
-  this._removeEditorOutsideClickSave();
 }
  
   // ==============================================
@@ -3180,7 +2940,8 @@ async _recordUpdateApi(dataUpdate, method = 'PUT') {
 
 
 _cleanPayloadValue(value) {
-  if (value === undefined) return null;
+  if (value === null || value === undefined || value === 'null') return null;
+  if (!isNaN(value) && value !== '') return Number(value);
   return value;
 }
 

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyGrid Editor Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-container {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .editor-demo {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    .editor-demo label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .editor-demo input,
+    .editor-demo select,
+    .editor-demo textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .editor-demo textarea {
+      font-family: monospace;
+    }
+    .commit-log {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .commit-log .entry {
+      padding: 4px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .commit-log .entry:last-child {
+      border-bottom: none;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #b56ef0;
+      color: white;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    h1 { color: #b56ef0; }
+    h2 { color: #555; font-size: 16px; margin-top: 30px; }
+    .field-group {
+      margin-bottom: 15px;
+    }
+    .field-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+      font-size: 13px;
+      color: #666;
+    }
+    .value-display {
+      margin-top: 4px;
+      padding: 4px 8px;
+      background: #e8f5e9;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>📊 AnyGrid Editor Test</h1>
+    <p>Testing the metadata-driven editor system</p>
+
+    <h2>📝 Text Editor</h2>
+    <div class="editor-demo" id="demo-text">
+      <label>First Name <span class="badge">text</span></label>
+      <div id="text-editor-container"></div>
+      <div class="value-display">Value: <span id="text-value">(none)</span></div>
+    </div>
+
+    <h2>🔢 Number Editor</h2>
+    <div class="editor-demo" id="demo-number">
+      <label>Quantity <span class="badge">number</span></label>
+      <div id="number-editor-container"></div>
+      <div class="value-display">Value: <span id="number-value">(none)</span></div>
+    </div>
+
+    <h2>📋 Select Editor</h2>
+    <div class="editor-demo" id="demo-select">
+      <label>Status <span class="badge">select</span></label>
+      <div id="select-editor-container"></div>
+      <div class="value-display">Value: <span id="select-value">(none)</span></div>
+    </div>
+
+    <h2>📅 DateTime Editor</h2>
+    <div class="editor-demo" id="demo-datetime">
+      <label>Delivery Date <span class="badge">datetime</span></label>
+      <div id="datetime-editor-container"></div>
+      <div class="value-display">Value: <span id="datetime-value">(none)</span></div>
+    </div>
+
+    <h2>✅ Checkbox Editor</h2>
+    <div class="editor-demo" id="demo-checkbox">
+      <label>Active <span class="badge">checkbox</span></label>
+      <div id="checkbox-editor-container"></div>
+      <div class="value-display">Value: <span id="checkbox-value">(none)</span></div>
+    </div>
+
+    <h2>📝 Textarea Editor</h2>
+    <div class="editor-demo" id="demo-textarea">
+      <label>Description <span class="badge">textarea</span></label>
+      <div id="textarea-editor-container"></div>
+      <div class="value-display">Value: <span id="textarea-value">(none)</span></div>
+    </div>
+
+    <h2>💰 Decimal Editor</h2>
+    <div class="editor-demo" id="demo-decimal">
+      <label>Price <span class="badge">decimal</span></label>
+      <div id="decimal-editor-container"></div>
+      <div class="value-display">Value: <span id="decimal-value">(none)</span></div>
+    </div>
+
+    <h2>📋 Commit Log</h2>
+    <div class="commit-log" id="commit-log">
+      <div class="entry">Ready for testing...</div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "/editors/": "/editors/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    // Use absolute paths from server root
+    import { 
+      TextEditor, NumberEditor, SelectEditor, 
+      DateTimeEditor, CheckboxEditor, TextareaEditor, DecimalEditor
+    } from '/editors/index.js';
+
+    // Commit log
+    const logContainer = document.getElementById('commit-log');
+    const logEntries = [];
+
+    function logCommit(field, value) {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = { timestamp, field, value };
+      logEntries.push(entry);
+      
+      // Keep last 10 entries
+      while (logEntries.length > 10) {
+        logEntries.shift();
+      }
+      
+      // Update display
+      logContainer.innerHTML = logEntries.map(e => 
+        `<div class="entry">[${e.timestamp}] ${e.field}: ${JSON.stringify(e.value)}</div>`
+      ).join('');
+    }
+
+    // Helper to create editor
+    function createEditor(EditorClass, containerId, valueDisplayId, fieldName, metadata) {
+      const container = document.getElementById(containerId);
+      const valueDisplay = document.getElementById(valueDisplayId);
+      
+      const editor = new EditorClass({
+        value: metadata.defaultValue || null,
+        metadata: metadata,
+        onCommit: (value) => {
+          logCommit(fieldName, value);
+          valueDisplay.textContent = value !== null ? JSON.stringify(value) : '(none)';
+        }
+      });
+      
+      container.appendChild(editor.render());
+      
+      return editor;
+    }
+
+    // 1. Text Editor
+    createEditor(TextEditor, 'text-editor-container', 'text-value', 'firstName', {
+      type: 'text',
+      placeholder: 'Enter first name',
+      required: true,
+      defaultValue: 'Jane'
+    });
+
+    // 2. Number Editor
+    createEditor(NumberEditor, 'number-editor-container', 'number-value', 'quantity', {
+      type: 'number',
+      placeholder: 'Enter quantity',
+      required: true,
+      min: 0,
+      max: 100,
+      defaultValue: 25
+    });
+
+    // 3. Select Editor
+    createEditor(SelectEditor, 'select-editor-container', 'select-value', 'status', {
+      type: 'select',
+      required: true,
+      options: [
+        { value: 'PENDING', label: 'Pending' },
+        { value: 'ACTIVE', label: 'Active' },
+        { value: 'COMPLETED', label: 'Completed' },
+        { value: 'DISCHARGED', label: 'Discharged' }
+      ],
+      defaultValue: 'ACTIVE'
+    });
+
+    // 4. DateTime Editor
+    createEditor(DateTimeEditor, 'datetime-editor-container', 'datetime-value', 'deliveryDate', {
+      type: 'datetime',
+      required: false,
+      defaultValue: new Date().toISOString()
+    });
+
+    // 5. Checkbox Editor
+    createEditor(CheckboxEditor, 'checkbox-editor-container', 'checkbox-value', 'active', {
+      type: 'checkbox',
+      required: false,
+      defaultValue: true
+    });
+
+    // 6. Textarea Editor
+    createEditor(TextareaEditor, 'textarea-editor-container', 'textarea-value', 'description', {
+      type: 'textarea',
+      placeholder: 'Enter description',
+      rows: 4,
+      required: false,
+      defaultValue: 'This is a test description.'
+    });
+
+    // 7. Decimal Editor
+    createEditor(DecimalEditor, 'decimal-editor-container', 'decimal-value', 'price', {
+      type: 'decimal',
+      placeholder: 'Enter price',
+      required: true,
+      precision: 2,
+      min: 0,
+      defaultValue: 149.95
+    });
+
+    console.log('✅ All editors initialized!');
+    console.log('📋 Commit log will show values as you edit.');
+  </script>
+</body>
+</html>
