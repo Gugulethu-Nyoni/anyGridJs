@@ -2565,94 +2565,94 @@ _hideModal() {
 
   // Initialize the data grid layout and event listeners
   initializeDataGrid() {
-    const dataGrid = document.getElementById(this.gridContainerId);
+  const dataGrid = document.getElementById(this.gridContainerId);
 
-    if (dataGrid) {
-      const options = [5, 10, 20, 50, 100]; // Define possible itemsPerPage options
+  if (!dataGrid) {
+    console.error(`Grid container with ID '${this.gridContainerId}' not found.`);
+    return;
+  }
 
-      // Generate select options dynamically if itemsPerPage feature is enabled
-      const selectOptions = this.features.itemsPerPage ? options.map(option => `
-        <option value="${option}" ${option === this.itemsPerPage ? 'selected' : ''}>${option}</option>
-      `).join('') : '';
+  // Establish AnyGrid's root component class.
+  // Preserve any existing theme/configuration classes.
+  dataGrid.classList.add('anygrid-container');
 
-      // Add a CSV export button if csvExport is enabled
-    const exportButtonHTML = this.features.csvExport ? `
-      <button id="export-csv-${this.gridContainerId}" class="anygrid-export-csv">Export CSV</button>
-    ` : '';
+  // Generate select options dynamically if itemsPerPage feature is enabled
+  const options = [5, 10, 20, 50, 100];
+  const selectOptions = this.features.itemsPerPage ? options.map(option => `
+    <option value="${option}" ${option === this.itemsPerPage ? 'selected' : ''}>${option}</option>
+  `).join('') : '';
 
+  const exportButtonHTML = this.features.csvExport ? `
+    <button id="export-csv-${this.gridContainerId}" class="anygrid-export-csv">Export CSV</button>
+  ` : '';
 
-     // Add a CSV export button if csvExport is enabled
-    const exportExcelButtonHTML = this.features.excelExport ? `
-      <button id="export-excel-${this.gridContainerId}" class="anygrid-export-excel">Export EXCEL</button>
-    ` : '';
+  const exportExcelButtonHTML = this.features.excelExport ? `
+    <button id="export-excel-${this.gridContainerId}" class="anygrid-export-excel">Export EXCEL</button>
+  ` : '';
 
-      const htmlContent = `
-        <div class="search-container"> 
-          ${this.features.search ? `<input type="text" id="${this.searchInputId}" class="anygrid-search-input" placeholder="Search...">` : ''}
-          ${this.features.itemsPerPage ? `<select id="${this.itemsPerPageId}" class="items-per-page">${selectOptions}</select>` : ''}
-          ${exportButtonHTML} ${exportExcelButtonHTML}
-        </div>
-        
-        <div class="anygrid-table-wrapper">
-        <table class="anygrid-table" id="${this.dataTableId}">
-          <thead>
-            <tr></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        </div>
-        ${this.features.pagination ? `<div id="${this.paginationContainerId}" class="anygrid-pagination"></div>` : ''}
-      `;
+  const htmlContent = `
+    <div class="search-container"> 
+      ${this.features.search ? `<input type="text" id="${this.searchInputId}" class="anygrid-search-input" placeholder="Search...">` : ''}
+      ${this.features.itemsPerPage ? `<select id="${this.itemsPerPageId}" class="items-per-page">${selectOptions}</select>` : ''}
+      ${exportButtonHTML} ${exportExcelButtonHTML}
+    </div>
+    
+    <div class="anygrid-table-wrapper">
+    <table class="anygrid-table" id="${this.dataTableId}">
+      <thead>
+        <tr></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    ${this.features.pagination ? `<div id="${this.paginationContainerId}" class="anygrid-pagination"></div>` : ''}
+  `;
 
-      //dataGrid.insertAdjacentHTML('afterbegin', htmlContent);
+  const template = document.createElement('template');
+  template.innerHTML = htmlContent.trim();
+  const clone = template.content.cloneNode(true);
+  dataGrid.appendChild(clone);
 
-      // Create a template
-        const template = document.createElement('template');
-        template.innerHTML = htmlContent.trim();
+  // Bind the CSV export button click event
+  if (this.features.csvExport) {
+    const exportButton = document.getElementById(`export-csv-${this.gridContainerId}`);
+    exportButton.addEventListener('click', this.exportToCSV.bind(this));
+  }
 
-        // Clone the template content
-        const clone = template.content.cloneNode(true);
+  if (this.features.excelExport) {
+    const exportExcelButton = document.getElementById(`export-excel-${this.gridContainerId}`);
+    exportExcelButton.addEventListener('click', this.exportToExcel.bind(this));
+  }
 
-        // Append the cloned content to the data grid container
-        dataGrid.appendChild(clone);
+  // Set up event listeners for items per page and search input
+  if (this.features.itemsPerPage) {
+    const itemsPerPageSelect = document.getElementById(`${this.itemsPerPageId}`);
+    itemsPerPageSelect.value = this.itemsPerPage;
+    itemsPerPageSelect.addEventListener('change', (event) => {
+      this.itemsPerPage = parseInt(event.target.value);
+      this.currentPage = 1;
+      this.renderData();
+      this.updatePagination();
+    });
+  }
 
-      // Bind the CSV export button click event
-    if (this.features.csvExport) {
-      const exportButton = document.getElementById(`export-csv-${this.gridContainerId}`);
-      exportButton.addEventListener('click', this.exportToCSV.bind(this));
-    }
+  if (this.features.search) {
+    this.searchInput = document.getElementById(this.searchInputId);
+    this.searchInput.addEventListener('input', this.searchTable.bind(this));
+  }
 
+  this.tbody = document.querySelector(`#${this.dataTableId} tbody`);
+  this.paginationContainer = document.getElementById(`${this.paginationContainerId}`);
 
- if (this.features.excelExport) {
-      const exportExcelButton = document.getElementById(`export-excel-${this.gridContainerId}`);
-      exportExcelButton.addEventListener('click', this.exportToExcel.bind(this));
-    }
-
-      // Set up event listeners for items per page and search input (only if those features are enabled)
-      if (this.features.itemsPerPage) {
-        const itemsPerPageSelect = document.getElementById(`${this.itemsPerPageId}`);
-        itemsPerPageSelect.value = this.itemsPerPage; // Set the initial value
-        itemsPerPageSelect.addEventListener('change', (event) => {
-          this.itemsPerPage = parseInt(event.target.value); // Update the value
-          this.currentPage = 1; // Reset the current page
-          this.renderData();
-          this.updatePagination();
-        });
-      }
-
-      if (this.features.search) {
-  this.searchInput = document.getElementById(this.searchInputId);
-  this.searchInput.addEventListener('input', this.searchTable.bind(this)); // Bind searchTable function to 'input' event
+  this.renderData(this.filteredData);
+  this.updatePagination();
 }
 
 
-      this.tbody = document.querySelector(`#${this.dataTableId} tbody`);
-      this.paginationContainer = document.getElementById(`${this.paginationContainerId}`);
 
-      this.renderData(this.filteredData);
-      this.updatePagination();
-    }
-  }
+
+
+
 
  renderData() {
   // Safeguard: Ensure filteredData is always an array
