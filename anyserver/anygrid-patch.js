@@ -7,7 +7,19 @@ import { resolveEditor } from './editors/index.js';
 
 const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
 
-/* DEFAULT THEME: PURE DARK */
+
+/* ==================================================== */
+/* ANYGRID CSS - COMPLETE CONSOLIDATED VERSION          */
+/* All selectors scoped to .anygrid-container           */
+/* Protected from external dashboard CSS interference   */
+/* ==================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+/* ==================================================== */
+/* THEME DEFINITIONS                                    */
+/* ==================================================== */
+
 .default-theme {
     --background-dark: #121212;
     --background-light: #1e1e1e;
@@ -28,7 +40,6 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
     --secondary-color: #666666;
     --secondary-color-rgb: 102, 102, 102;
 }
-
 
 .dark-theme {
     --background-dark: #121212;
@@ -51,7 +62,6 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
     --secondary-color-rgb: 102, 102, 102;
 }
 
-/* Light theme */
 .light-theme {
     --background-dark: #ededeb;
     --background-light: #f9f9f9;
@@ -73,7 +83,6 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
     --secondary-color-rgb: 90, 45, 129;
 }
 
-/* Pink theme */
 .pink-theme {
     --background-dark: #fce4ec;
     --background-light: #f8bbd0;
@@ -95,7 +104,6 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
     --secondary-color-rgb: 173, 20, 87;
 }
 
-/* Indigo theme */
 .indigo-theme {
     --background-dark: #2f3640;
     --background-light: #3b4151;
@@ -117,7 +125,6 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
     --secondary-color-rgb: 59, 47, 107;
 }
 
-/* Blue theme */
 .blue-theme {
     --background-dark: #87ceeb;
     --background-light: #add8e6;
@@ -139,7 +146,6 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
     --secondary-color-rgb: 3, 155, 229;
 }
 
-/* Dark Orange theme */
 .dark-orange-theme {
     --background-dark: #2f2f2f;
     --background-light: #3c3c3c;
@@ -184,206 +190,190 @@ const ANYGRID_CSS = `@import url('https://fonts.googleapis.com/css2?family=Monts
 }
 
 /* ==================================================== */
-/* GENERAL DATA GRID CONTAINER STYLING                  */
+/* CONTAINER - ISOLATED FROM DASHBOARD                 */
 /* ==================================================== */
 
 .anygrid-container {
+    width: 100%;
+    max-width: 95%;
+    min-width: 0;
+    box-sizing: border-box;
+
     border-radius: 0.75rem;
     overflow: hidden;
-    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+
+    box-shadow: 0 4px 6px -1px var(--shadow-color),
+                0 2px 4px -2px var(--shadow-color);
+
     background-color: var(--background-dark);
     margin: 1rem auto;
-    max-width: 95%;
+
     display: flex;
     flex-direction: column;
 }
 
-/* Table wrapper for horizontal scrolling */
-.anygrid-table-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
+/* ==================================================== */
+/* TABLE WRAPPER - ISOLATED                            */
+/* ==================================================== */
+
+.anygrid-container .anygrid-table-wrapper {
     width: 100%;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-}
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 
+    overflow-x: auto !important;
+    overflow-y: auto !important;
 
-/* ==================================================== */
-/* STICKY TABLE HEADERS - VERTICAL                      */
-/* ==================================================== */
+    max-height: 70vh;
 
-/* Ensure the table wrapper has a fixed height for vertical scrolling */
-.anygrid-table-wrapper {
-    max-height: 70vh; /* Limit height to 70% of viewport */
-    overflow-y: auto; /* Enable vertical scrolling */
-}
-
-/* Enhanced sticky header styling */
-.anygrid-table thead tr {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--input-background);
-}
-
-/* Ensure sticky header has proper layering */
-.anygrid-table thead {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-/* Add shadow to sticky header when scrolled */
-.anygrid-table thead tr.sticky-active {
-    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
-}
-
-/* Ensure sticky first column has higher z-index than header */
-.anygrid-table th:first-child,
-.anygrid-table td:first-child {
-    z-index: 15; /* Higher than header's z-index */
-}
-
-/* Reset sticky behavior on mobile */
-@media (max-width: 768px) {
-    .anygrid-table-wrapper {
-        max-height: none; /* Remove height limit on mobile */
-        overflow-y: visible; /* Disable vertical scrolling */
-    }
-    
-    .anygrid-table thead tr,
-    .anygrid-table thead {
-        position: static; /* Disable sticky on mobile */
-        z-index: auto;
-    }
-    
-    .anygrid-table th:first-child,
-    .anygrid-table td:first-child {
-        position: static;
-        z-index: auto;
-    }
-}
-
-/* Smooth scrolling behavior */
-.anygrid-table-wrapper {
+    -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
-}
 
-/* Optional: Add a fade effect at the bottom when scrolling */
-.anygrid-table-wrapper::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    background: linear-gradient(to bottom, transparent, var(--background-dark));
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.anygrid-table-wrapper.scrolled::after {
-    opacity: 1;
+    position: relative;
 }
 
 /* ==================================================== */
-/* TABLE STYLING - DESKTOP                              */
+/* TABLE - ISOLATED FROM DASHBOARD                     */
 /* ==================================================== */
 
-.anygrid-table {
+.anygrid-container .anygrid-table {
     width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+
     border-collapse: collapse;
+    border-spacing: 0;
+
+    table-layout: auto;
+
     font-family: 'Montserrat', sans-serif;
     font-size: 0.875rem;
+
     background-color: var(--background-dark);
     color: var(--text-light);
-    min-width: 100%; /* Force table to be at least as wide as container */
-    table-layout: auto; /* Allow columns to adjust to content */
+
+    height: auto;
+    max-height: none;
 }
 
-.anygrid-table th,
-.anygrid-table td {
-    border: none;
-    text-align: left;
-    padding: 0.75rem 1rem;
-    vertical-align: middle;
-    min-width: 120px; /* Minimum column width */
-    max-width: 200px; /* Maximum column width */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+/* ==================================================== */
+/* TABLE HEADER - STICKY & ISOLATED                    */
+/* ==================================================== */
 
-/* Make first column sticky on horizontal scroll */
-.anygrid-table th:first-child,
-.anygrid-table td:first-child {
-    position: sticky;
-    left: 0;
-    background-color: var(--input-background);
-    z-index: 5;
-    min-width: 80px; /* Smaller min-width for ID column */
-}
-
-/* Fix background colors for sticky first column in table body */
-.anygrid-table tbody tr td:first-child {
-    background-color: var(--background-dark);
-}
-
-.anygrid-table tbody tr:nth-child(even) td:first-child {
-    background-color: var(--background-light);
-}
-
-/* Ensure sticky header row */
-.anygrid-table thead tr {
-    background-color: var(--input-background);
-    color: var(--text-light);
+.anygrid-container .anygrid-table thead {
     position: sticky;
     top: 0;
     z-index: 10;
+}
+
+.anygrid-container .anygrid-table thead tr {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--input-background);
     box-shadow: 0 1px 3px var(--shadow-color);
 }
 
-.anygrid-table th {
+.anygrid-container .anygrid-table thead tr.sticky-active {
+    box-shadow: 0 4px 6px -1px var(--shadow-color),
+                0 2px 4px -2px var(--shadow-color);
+}
+
+.anygrid-container .anygrid-table th {
     font-weight: 600;
     padding-top: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--border-color);
 }
 
-.anygrid-table tbody tr {
+/* ==================================================== */
+/* TABLE ROWS - RESTORE TABLE-ROW LAYOUT               */
+/* ==================================================== */
+
+.anygrid-container .anygrid-table tbody tr {
+    display: table-row !important;
+    position: static !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    transform: none !important;
+
     border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.2s ease;
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background-color 0.2s ease;
 }
 
-.anygrid-table tbody tr:last-child {
+.anygrid-container .anygrid-table tbody tr:last-child {
     border-bottom: none;
 }
 
-.anygrid-table tbody tr:nth-child(even) {
+.anygrid-container .anygrid-table tbody tr:nth-child(even) {
     background-color: var(--background-light);
 }
 
-.anygrid-table tbody tr:hover {
+.anygrid-container .anygrid-table tbody tr:hover {
     background-color: var(--button-background-hover);
     color: var(--text-contrast);
 }
 
-a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
+/* ==================================================== */
+/* TABLE CELLS - RESTORE TABLE-CELL LAYOUT             */
+/* ==================================================== */
 
-a:hover {
-    color: var(--button-background-hover);
-    text-decoration: underline;
+.anygrid-container .anygrid-table th,
+.anygrid-container .anygrid-table td {
+    display: table-cell !important;
+    position: static !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    box-sizing: border-box;
+    vertical-align: middle;
+    line-height: normal;
+
+    border: none;
+    text-align: left;
+    padding: 0.75rem 1rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    min-width: 120px;
+    max-width: 200px;
 }
 
 /* ==================================================== */
-/* TOP ACTIONS - SEARCH, ITEMS PER PAGE, EXPORT         */
+/* STICKY FIRST COLUMN - PRESERVED                     */
 /* ==================================================== */
 
-.search-container {
+.anygrid-container .anygrid-table th:first-child,
+.anygrid-container .anygrid-table td:first-child {
+    position: sticky !important;
+    left: 0;
+    background-color: var(--input-background);
+    z-index: 15;
+    min-width: 80px;
+}
+
+.anygrid-container .anygrid-table tbody tr td:first-child {
+    background-color: var(--background-dark);
+}
+
+.anygrid-container .anygrid-table tbody tr:nth-child(even) td:first-child {
+    background-color: var(--background-light);
+}
+
+/* ==================================================== */
+/* SEARCH CONTAINER - ISOLATED                         */
+/* ==================================================== */
+
+.anygrid-container .search-container {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -395,9 +385,8 @@ a:hover {
     border-top-right-radius: 0.75rem;
 }
 
-/* Standard input and select styles */
-input.anygrid-search-input,
-select.items-per-page {
+.anygrid-container input.anygrid-search-input,
+.anygrid-container select.items-per-page {
     background-color: var(--input-background);
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
@@ -417,36 +406,36 @@ select.items-per-page {
     background-size: 1.25rem;
 }
 
-input.anygrid-search-input {
+.anygrid-container input.anygrid-search-input {
     max-width: 18rem;
     color: var(--text-light);
 }
 
-input.anygrid-search-input:focus {
+.anygrid-container input.anygrid-search-input:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
 }
 
-input.anygrid-search-input::placeholder {
+.anygrid-container input.anygrid-search-input::placeholder {
     color: var(--label-color);
     opacity: 0.7;
 }
 
-select.items-per-page {
+.anygrid-container select.items-per-page {
     color: var(--text-light);
     max-width: 10rem;
 }
 
-select.items-per-page:focus {
+.anygrid-container select.items-per-page:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
 }
 
 /* CSV & Excel Export Buttons */
-.anygrid-export-csv,
-.anygrid-export-excel {
+.anygrid-container .anygrid-export-csv,
+.anygrid-container .anygrid-export-excel {
     background-color: var(--button-background);
     color: var(--text-contrast);
     border: 1px solid var(--border-color);
@@ -462,22 +451,22 @@ select.items-per-page:focus {
     box-shadow: 0 1px 2px 0 var(--shadow-color);
 }
 
-.anygrid-export-csv::before,
-.anygrid-export-excel::before {
+.anygrid-container .anygrid-export-csv::before,
+.anygrid-container .anygrid-export-excel::before {
     content: "↓";
     font-size: 1rem;
     line-height: 1;
 }
 
-.anygrid-export-csv:hover,
-.anygrid-export-excel:hover {
+.anygrid-container .anygrid-export-csv:hover,
+.anygrid-container .anygrid-export-excel:hover {
     background-color: var(--button-background-hover);
     border-color: var(--button-background-hover);
     box-shadow: 0 2px 4px 0 var(--shadow-color);
 }
 
-.anygrid-export-csv:disabled,
-.anygrid-export-excel:disabled {
+.anygrid-container .anygrid-export-csv:disabled,
+.anygrid-container .anygrid-export-excel:disabled {
     background-color: var(--input-background-disabled);
     color: var(--label-color);
     cursor: not-allowed;
@@ -485,17 +474,11 @@ select.items-per-page:focus {
     box-shadow: none;
 }
 
-.anygrid-export-csv:focus,
-.anygrid-export-excel:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
-}
-
 /* ==================================================== */
-/* PAGINATION                                            */
+/* PAGINATION - ISOLATED                              */
 /* ==================================================== */
 
-.pagination-wrapper {
+.anygrid-container .pagination-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -508,19 +491,19 @@ select.items-per-page:focus {
     gap: 1rem;
 }
 
-.pagination-info {
+.anygrid-container .pagination-info {
     font-size: 0.875rem;
     color: var(--text-light);
     font-family: 'Montserrat', sans-serif;
 }
 
-.pagination-buttons {
+.anygrid-container .pagination-buttons {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
 }
 
-.pagination-button {
+.anygrid-container .pagination-button {
     background-color: var(--button-background);
     border: none;
     border-radius: 50%;
@@ -537,21 +520,21 @@ select.items-per-page:focus {
     box-shadow: 0 2px 4px 0 var(--shadow-color);
 }
 
-.pagination-button.active {
+.anygrid-container .pagination-button.active {
     background-color: var(--primary-color);
     color: var(--text-contrast);
     box-shadow: 0 4px 8px 0 rgba(var(--primary-color-rgb), 0.3);
     transform: translateY(-1px);
 }
 
-.pagination-button:hover:not(.active) {
+.anygrid-container .pagination-button:hover:not(.active) {
     background-color: var(--button-background-hover);
     color: var(--text-contrast);
     box-shadow: 0 3px 6px 0 var(--shadow-color);
     transform: translateY(-1px);
 }
 
-.pagination-button:disabled {
+.anygrid-container .pagination-button:disabled {
     background-color: var(--input-background-disabled);
     color: var(--label-color);
     cursor: not-allowed;
@@ -559,17 +542,12 @@ select.items-per-page:focus {
     transform: none;
 }
 
-.pagination-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25);
-}
-
 /* ==================================================== */
-/* ACTION BUTTONS                                       */
+/* ACTION BUTTONS - ISOLATED                           */
 /* ==================================================== */
 
-.edit,
-.delete {
+.anygrid-container .edit,
+.anygrid-container .delete {
     border-radius: 0.375rem;
     padding: 0.4rem 0.75rem;
     color: var(--text-contrast);
@@ -583,60 +561,60 @@ select.items-per-page:focus {
     box-shadow: 0 1px 2px 0 var(--shadow-color);
 }
 
-.edit {
+.anygrid-container .edit {
     background-color: var(--edit-background);
 }
 
-.delete {
+.anygrid-container .delete {
     background-color: var(--delete-background);
 }
 
-.edit:hover {
+.anygrid-container .edit:hover {
     background-color: color-mix(in srgb, var(--edit-background) 80%, black);
     box-shadow: 0 2px 4px 0 var(--shadow-color);
 }
 
-.delete:hover {
+.anygrid-container .delete:hover {
     background-color: color-mix(in srgb, var(--delete-background) 80%, black);
     box-shadow: 0 2px 4px 0 var(--shadow-color);
 }
 
-.edit::before {
+.anygrid-container .edit::before {
     content: '✎';
 }
 
-.delete::before {
+.anygrid-container .delete::before {
     content: '🗑';
 }
 
 /* ==================================================== */
-/* SORTABLE COLUMNS                                     */
+/* SORTABLE COLUMNS - ISOLATED                         */
 /* ==================================================== */
 
-.anygrid-column-sortable {
+.anygrid-container .anygrid-column-sortable {
     cursor: pointer;
     position: relative;
 }
 
-.anygrid-column-sortable:hover::after {
+.anygrid-container .anygrid-column-sortable:hover::after {
     opacity: 1;
 }
 
-.anygrid-column-sortable.asc::after {
+.anygrid-container .anygrid-column-sortable.asc::after {
     content: '↑';
     opacity: 1;
 }
 
-.anygrid-column-sortable.desc::after {
+.anygrid-container .anygrid-column-sortable.desc::after {
     content: '↓';
     opacity: 1;
 }
 
 /* ==================================================== */
-/* STATUS BADGES                                        */
+/* STATUS BADGES - ISOLATED                            */
 /* ==================================================== */
 
-.status-badge {
+.anygrid-container .status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: 2rem;
@@ -646,368 +624,65 @@ select.items-per-page:focus {
     letter-spacing: 0.03em;
 }
 
-.status-active {
+.anygrid-container .status-active {
     background-color: rgba(46, 125, 50, 0.1);
     color: #2E7D32;
     border: 1px solid rgba(46, 125, 50, 0.3);
 }
 
-.status-inactive {
+.anygrid-container .status-inactive {
     background-color: rgba(244, 67, 54, 0.1);
     color: #F44336;
     border: 1px solid rgba(244, 67, 54, 0.3);
 }
 
 /* ==================================================== */
-/* CUSTOM SCROLLBAR STYLING                             */
+/* SCROLLBAR - ISOLATED                               */
 /* ==================================================== */
 
-.anygrid-table-wrapper::-webkit-scrollbar {
+.anygrid-container .anygrid-table-wrapper::-webkit-scrollbar {
     height: 8px;
     width: 8px;
 }
 
-.anygrid-table-wrapper::-webkit-scrollbar-track {
+.anygrid-container .anygrid-table-wrapper::-webkit-scrollbar-track {
     background: var(--background-light);
     border-radius: 4px;
 }
 
-.anygrid-table-wrapper::-webkit-scrollbar-thumb {
+.anygrid-container .anygrid-table-wrapper::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 4px;
 }
 
-.anygrid-table-wrapper::-webkit-scrollbar-thumb:hover {
+.anygrid-container .anygrid-table-wrapper::-webkit-scrollbar-thumb:hover {
     background: var(--primary-color);
 }
 
-.anygrid-table-wrapper {
+.anygrid-container .anygrid-table-wrapper {
     scrollbar-width: thin;
     scrollbar-color: var(--border-color) var(--background-light);
 }
 
 /* ==================================================== */
-/* MOBILE RESPONSIVE STYLES (768px and below)           */
+/* GENERAL UTILITIES - ISOLATED                        */
 /* ==================================================== */
 
-@media (max-width: 768px) {
-    /* Mobile search container */
-    .search-container {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
+.anygrid-container .anygrid-table td * {
+    max-width: 100%;
+}
 
-    input.anygrid-search-input,
-    select.items-per-page,
-    .anygrid-export-csv,
-    .anygrid-export-excel {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-        min-height: 44px;
-    }
-
-    input.anygrid-search-input,
-    select.items-per-page {
-        max-width: 100% !important;
-        text-align: left;
-        font-size: 1rem;
-    }
-
-    input.anygrid-search-input::placeholder {
-        text-align: left;
-    }
-    
-    select.items-per-page option {
-        text-align: left;
-    }
-
-    .anygrid-export-csv,
-    .anygrid-export-excel {
-        width: 100%;
-        justify-content: center;
-        padding: 0.75rem;
-        margin-top: 0.5rem;
-        text-align: center;
-    }
-
-    .anygrid-export-csv {
-        margin-bottom: 0.5rem;
-    }
-
-    /* Hide horizontal scrolling wrapper on mobile */
-    .anygrid-table-wrapper {
-        overflow-x: hidden;
-        overflow-y: visible;
-    }
-    
-    /* Reset table layout for mobile */
-    .anygrid-table,
-    .anygrid-table tbody,
-    .anygrid-table tr,
-    .anygrid-table td {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        min-width: unset;
-        max-width: unset;
-        white-space: normal;
-    }
-    
-    /* Hide table headers */
-    .anygrid-table thead {
-        display: none;
-    }
-    
-    /* Style each row as a card */
-    .anygrid-table tbody tr {
-        margin-bottom: 1rem;
-        padding: 1.25rem;
-        background-color: var(--background-light);
-        border: 1px solid var(--border-color);
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 8px 0 var(--shadow-color);
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        transition: all 0.25s ease;
-    }
-    
-    /* Remove alternating row colors on mobile */
-    .anygrid-table tbody tr:nth-child(even) {
-        background-color: var(--background-light);
-    }
-    
-    /* Hover effect for cards */
-    .anygrid-table tbody tr:hover {
-        background-color: var(--button-background);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px 0 var(--shadow-color);
-    }
-    
-    /* Style each cell as a field within the card - RIGHT ALIGNED */
-    .anygrid-table td {
-        padding: 0;
-        border: none;
-        border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.15);
-        padding-bottom: 0.75rem;
-        margin-bottom: 0.75rem;
-        text-align: right;
-        display: block;
-        position: relative;
-    }
-    
-    /* Remove border from last cell */
-    .anygrid-table td:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
-    
-    /* Style the cell content - RIGHT ALIGNED */
-    .anygrid-table td > * {
-        width: 100%;
-        word-break: break-word;
-        font-size: 0.95rem;
-        line-height: 1.4;
-        color: var(--text-light);
-        text-align: right;
-    }
-    
-    /* Style links within cells */
-    .anygrid-table td a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: 500;
-        display: inline-block;
-        text-align: right;
-        width: auto;
-    }
-    
-    .anygrid-table td a:hover {
-        color: var(--secondary-color);
-        text-decoration: underline;
-    }
-    
-    /* Style strong elements within cells */
-    .anygrid-table td strong {
-        color: var(--secondary-color);
-        font-weight: 600;
-        text-align: right;
-    }
-    
-    /* Status badges on mobile */
-    .status-badge {
-        padding: 0.2rem 0.5rem;
-        font-size: 0.7rem;
-        margin-left: auto;
-    }
-    
-    /* Action buttons styling - right aligned */
-    .anygrid-table td .edit,
-    .anygrid-table td .delete {
-        margin-left: auto;
-        margin-right: 0;
-        text-align: center;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 44px;
-        min-height: 44px;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-    }
-    
-    /* Stack action buttons */
-    .anygrid-table td .edit + .delete {
-        margin-left: 0.5rem;
-        margin-top: 0.25rem;
-        display: inline-flex;
-    }
-    
-    /* Reset sticky positioning on mobile */
-    .anygrid-table th:first-child,
-    .anygrid-table td:first-child {
-        position: static;
-        background-color: unset;
-        min-width: unset;
-    }
-    
-    /* Reset sticky header on mobile */
-    .anygrid-table thead tr {
-        position: static;
-    }
-    
-    /* Hide sort indicators on mobile */
-    .anygrid-column-sortable {
-        display: none;
-    }
-    
-    /* Adjust container for mobile */
-    .anygrid-container {
-        margin: 0.75rem auto;
-        max-width: 100%;
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-    }
-    
-    /* Adjust pagination for mobile */
-    .pagination-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-        padding: 1rem;
-    }
-    
-    .pagination-buttons {
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    .pagination-button {
-        width: 2.5rem;
-        height: 2.5rem;
-        font-size: 0.875rem;
-        min-width: 44px;
-        min-height: 44px;
-    }
-    
-    .pagination-info {
-        text-align: center;
-    }
+.anygrid-container .anygrid-table tbody tr {
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background-color 0.2s ease;
 }
 
 /* ==================================================== */
-/* VERY SMALL SCREENS (480px and below)                 */
+/* MODAL CSS - ISOLATED                               */
 /* ==================================================== */
 
-@media (max-width: 480px) {
-    .anygrid-table tbody tr {
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        gap: 0.5rem;
-    }
-    
-    .anygrid-table td {
-        padding-bottom: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .anygrid-table td > * {
-        font-size: 0.875rem;
-    }
-    
-    /* Stack buttons horizontally when in same cell */
-    .anygrid-table td .edit + .delete {
-        margin-left: 0.5rem;
-        margin-top: 0;
-    }
-    
-    /* Adjust container padding */
-    .anygrid-container {
-        padding: 0.5rem;
-    }
-    
-    /* Adjust pagination buttons */
-    .pagination-button {
-        width: 2.25rem;
-        height: 2.25rem;
-        font-size: 0.8125rem;
-    }
-}
-
-/* ==================================================== */
-/* MEDIA QUERIES FOR DIFFERENT DESKTOP SIZES            */
-/* ==================================================== */
-
-/* Small desktop/laptop */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .anygrid-container {
-        max-width: 98%;
-    }
-    
-    .anygrid-table th,
-    .anygrid-table td {
-        min-width: 100px;
-        max-width: 180px;
-        padding: 0.6rem 0.8rem;
-    }
-}
-
-/* Large desktop */
-@media (min-width: 1025px) {
-    .anygrid-container {
-        max-width: 90%;
-    }
-    
-    .anygrid-table th,
-    .anygrid-table td {
-        min-width: 140px;
-        max-width: 220px;
-    }
-}
-
-/* Very large desktop */
-@media (min-width: 1440px) {
-    .anygrid-container {
-        max-width: 85%;
-    }
-    
-    .anygrid-table th,
-    .anygrid-table td {
-        min-width: 150px;
-        max-width: 250px;
-    }
-}
-
-/* ==================================================== */
-/* MODAL CSS                                            */
-/* ==================================================== */
-
-.anygrid-modal {
+.anygrid-container .anygrid-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -1018,7 +693,7 @@ select.items-per-page:focus {
     font-family: 'Montserrat', sans-serif;
 }
 
-.modal-content {
+.anygrid-container .modal-content {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -1036,7 +711,7 @@ select.items-per-page:focus {
     border: 1px solid #cccccc;
 }
 
-.modal-backdrop {
+.anygrid-container .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -1047,11 +722,11 @@ select.items-per-page:focus {
     z-index: 1000;
 }
 
-.modal-body {
+.anygrid-container .modal-body {
     padding: 1.5rem 0;
 }
 
-.modal-footer {
+.anygrid-container .modal-footer {
     margin-top: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid #cccccc;
@@ -1060,28 +735,28 @@ select.items-per-page:focus {
     gap: 0.75rem;
 }
 
-.record-field {
+.anygrid-container .record-field {
     display: flex;
     margin-bottom: 1.25rem;
     align-items: flex-start;
     flex-wrap: wrap;
 }
 
-.record-field strong,
-.record-field label {
+.anygrid-container .record-field strong,
+.anygrid-container .record-field label {
     flex: 0 0 150px;
     font-weight: 600;
     color: #5a2d81;
     padding-right: 1rem;
 }
 
-.record-field span {
+.anygrid-container .record-field span {
     flex: 1;
     word-break: break-word;
     color: #333333;
 }
 
-.record-field.non-editable {
+.anygrid-container .record-field.non-editable {
     background-color: #f5f5f5;
     border-radius: 0.375rem;
     padding: 0.5rem 1rem;
@@ -1089,17 +764,17 @@ select.items-per-page:focus {
     opacity: 0.9;
 }
 
-.record-field.non-editable strong,
-.record-field.non-editable span {
+.anygrid-container .record-field.non-editable strong,
+.anygrid-container .record-field.non-editable span {
     color: #8a8787;
     opacity: 0.8;
 }
 
-.record-field:not(.non-editable) {
+.anygrid-container .record-field:not(.non-editable) {
     cursor: pointer;
 }
 
-.record-field input {
+.anygrid-container .record-field input {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #cccccc;
@@ -1111,13 +786,13 @@ select.items-per-page:focus {
     transition: all 0.2s;
 }
 
-.record-field input:focus {
+.anygrid-container .record-field input:focus {
     border-color: #4f4d4d;
     outline: none;
     box-shadow: 0 0 0 3px rgba(79, 77, 77, 0.25);
 }
 
-.modal-close {
+.anygrid-container .modal-close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -1131,13 +806,13 @@ select.items-per-page:focus {
     transition: color 0.2s;
 }
 
-.modal-close:hover {
+.anygrid-container .modal-close:hover {
     color: #333333;
 }
 
-.anygrid-btn-delete,
-.btn-save,
-.retry-btn {
+.anygrid-container .anygrid-btn-delete,
+.anygrid-container .btn-save,
+.anygrid-container .retry-btn {
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
@@ -1148,31 +823,31 @@ select.items-per-page:focus {
     box-shadow: 0 1px 2px 0 rgba(79, 77, 77, 0.1);
 }
 
-.anygrid-btn-delete,
-.retry-btn {
+.anygrid-container .anygrid-btn-delete,
+.anygrid-container .retry-btn {
     background-color: #dc3545;
 }
 
-.btn-save {
+.anygrid-container .btn-save {
     background-color: #8a8787;
 }
 
-.anygrid-btn-delete:hover,
-.retry-btn:hover {
+.anygrid-container .anygrid-btn-delete:hover,
+.anygrid-container .retry-btn:hover {
     background-color: #c82333;
     box-shadow: 0 2px 4px 0 rgba(79, 77, 77, 0.1);
 }
 
-.btn-save:hover {
+.anygrid-container .btn-save:hover {
     background-color: #666666;
     box-shadow: 0 2px 4px 0 rgba(79, 77, 77, 0.1);
 }
 
-.anygrid-modal.fade .modal-content {
+.anygrid-container .anygrid-modal.fade .modal-content {
     animation: fadeIn 0.3s ease-out;
 }
 
-.anygrid-modal.slide .modal-content {
+.anygrid-container .anygrid-modal.slide .modal-content {
     animation: slideIn 0.3s ease-out;
 }
 
@@ -1198,7 +873,7 @@ select.items-per-page:focus {
     }
 }
 
-.modal-status {
+.anygrid-container .modal-status {
     padding: 1rem;
     margin-top: 1.5rem;
     border-radius: 0.5rem;
@@ -1207,62 +882,62 @@ select.items-per-page:focus {
     font-size: 0.9rem;
 }
 
-.modal-status.loading {
+.anygrid-container .modal-status.loading {
     background: rgba(79, 77, 77, 0.1);
     color: #4f4d4d;
 }
 
-.modal-status.success {
+.anygrid-container .modal-status.success {
     background: #e6f4ea;
     color: #137333;
 }
 
-.modal-status.error {
+.anygrid-container .modal-status.error {
     background: #fce8e6;
     color: #d93025;
 }
 
-.delete-confirmation,
-.delete-error {
+.anygrid-container .delete-confirmation,
+.anygrid-container .delete-error {
     text-align: center;
     padding: 2.5rem;
     font-size: 1rem;
 }
 
-.delete-confirmation {
+.anygrid-container .delete-confirmation {
     color: #137333;
 }
 
-.delete-error {
+.anygrid-container .delete-error {
     color: #d93025;
 }
 
-.checkmark,
-.crossmark {
+.anygrid-container .checkmark,
+.anygrid-container .crossmark {
     width: 70px;
     height: 70px;
     margin: 0 auto 2rem;
     display: block;
 }
 
-.checkmark circle {
+.anygrid-container .checkmark circle {
     stroke: #4CAF50;
     stroke-width: 2.5;
 }
 
-.checkmark path {
+.anygrid-container .checkmark path {
     stroke: #4CAF50;
     stroke-width: 2.5;
     stroke-linecap: round;
     animation: checkmark 0.6s ease-in-out forwards;
 }
 
-.crossmark circle {
+.anygrid-container .crossmark circle {
     stroke: #F44336;
     stroke-width: 2.5;
 }
 
-.crossmark path {
+.anygrid-container .crossmark path {
     stroke: #F44336;
     stroke-width: 2.5;
     stroke-linecap: round;
@@ -1292,14 +967,14 @@ select.items-per-page:focus {
 }
 
 /* ==================================================== */
-/* ROW STATES                                           */
+/* ROW STATES - ISOLATED                              */
 /* ==================================================== */
 
-.row-deleting {
+.anygrid-container .row-deleting {
     animation: pulseWarning 0.8s infinite alternate;
 }
 
-.row-updated {
+.anygrid-container .row-updated {
     animation: highlightUpdate 2s ease-out;
 }
 
@@ -1322,19 +997,327 @@ select.items-per-page:focus {
 }
 
 /* ==================================================== */
-/* GENERAL UTILITIES                                    */
+/* MOBILE RESPONSIVE LAYOUT (768px and below)          */
 /* ==================================================== */
 
-.anygrid-table td * {
-    max-width: 100%;
+@media (max-width: 768px) {
+    /* Mobile search container */
+    .anygrid-container .search-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .anygrid-container input.anygrid-search-input,
+    .anygrid-container select.items-per-page,
+    .anygrid-container .anygrid-export-csv,
+    .anygrid-container .anygrid-export-excel {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+
+    .anygrid-container input.anygrid-search-input,
+    .anygrid-container select.items-per-page {
+        max-width: 100% !important;
+        text-align: left;
+        font-size: 1rem;
+    }
+
+    .anygrid-container input.anygrid-search-input::placeholder {
+        text-align: left;
+    }
+
+    .anygrid-container select.items-per-page option {
+        text-align: left;
+    }
+
+    .anygrid-container .anygrid-export-csv,
+    .anygrid-container .anygrid-export-excel {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .anygrid-container .anygrid-export-csv {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Override desktop table-row with flex/card layout */
+    .anygrid-container .anygrid-table-wrapper {
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+        max-height: none !important;
+    }
+
+    .anygrid-container .anygrid-table,
+    .anygrid-container .anygrid-table tbody,
+    .anygrid-container .anygrid-table tr,
+    .anygrid-container .anygrid-table td {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        min-width: unset !important;
+        max-width: unset !important;
+        white-space: normal !important;
+    }
+
+    .anygrid-container .anygrid-table thead {
+        display: none !important;
+    }
+
+    .anygrid-container .anygrid-table tbody tr {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1.25rem !important;
+        margin-bottom: 1rem !important;
+        background-color: var(--background-light) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 0.75rem !important;
+        box-shadow: 0 4px 8px 0 var(--shadow-color) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        gap: 0.75rem !important;
+        transition: all 0.25s ease !important;
+    }
+
+    /* Remove alternating row colors on mobile */
+    .anygrid-container .anygrid-table tbody tr:nth-child(even) {
+        background-color: var(--background-light) !important;
+    }
+
+    /* Hover effect for cards */
+    .anygrid-container .anygrid-table tbody tr:hover {
+        background-color: var(--button-background) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 6px 12px 0 var(--shadow-color) !important;
+    }
+
+    /* Style each cell as a field within the card - RIGHT ALIGNED */
+    .anygrid-container .anygrid-table td {
+        padding: 0 !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.15) !important;
+        padding-bottom: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+        text-align: right !important;
+        display: block !important;
+        position: relative !important;
+        min-width: unset !important;
+        max-width: unset !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        white-space: normal !important;
+    }
+
+    .anygrid-container .anygrid-table td:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Style the cell content - RIGHT ALIGNED */
+    .anygrid-container .anygrid-table td > * {
+        width: 100% !important;
+        word-break: break-word !important;
+        font-size: 0.95rem !important;
+        line-height: 1.4 !important;
+        color: var(--text-light) !important;
+        text-align: right !important;
+    }
+
+    /* Style links within cells */
+    .anygrid-container .anygrid-table td a {
+        color: var(--primary-color) !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        display: inline-block !important;
+        text-align: right !important;
+        width: auto !important;
+    }
+
+    .anygrid-container .anygrid-table td a:hover {
+        color: var(--secondary-color) !important;
+        text-decoration: underline !important;
+    }
+
+    /* Style strong elements within cells */
+    .anygrid-container .anygrid-table td strong {
+        color: var(--secondary-color) !important;
+        font-weight: 600 !important;
+        text-align: right !important;
+    }
+
+    /* Status badges on mobile */
+    .anygrid-container .status-badge {
+        padding: 0.2rem 0.5rem !important;
+        font-size: 0.7rem !important;
+        margin-left: auto !important;
+    }
+
+    /* Action buttons styling - right aligned */
+    .anygrid-container .anygrid-table td .edit,
+    .anygrid-container .anygrid-table td .delete {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        text-align: center !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.875rem !important;
+    }
+
+    /* Stack action buttons */
+    .anygrid-container .anygrid-table td .edit + .delete {
+        margin-left: 0.5rem !important;
+        margin-top: 0.25rem !important;
+        display: inline-flex !important;
+    }
+
+    /* Reset sticky positioning on mobile */
+    .anygrid-container .anygrid-table th:first-child,
+    .anygrid-container .anygrid-table td:first-child {
+        position: static !important;
+        background-color: unset !important;
+        min-width: unset !important;
+        z-index: auto !important;
+    }
+
+    /* Reset sticky header on mobile */
+    .anygrid-container .anygrid-table thead tr {
+        position: static !important;
+        z-index: auto !important;
+    }
+
+    /* Hide sort indicators on mobile */
+    .anygrid-container .anygrid-column-sortable {
+        display: none !important;
+    }
+
+    /* Adjust container for mobile */
+    .anygrid-container {
+        margin: 0.75rem auto !important;
+        max-width: 100% !important;
+        border-radius: 0.75rem !important;
+        padding: 0.75rem !important;
+    }
+
+    /* Adjust pagination for mobile */
+    .anygrid-container .pagination-wrapper {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 1rem !important;
+        padding: 1rem !important;
+    }
+
+    .anygrid-container .pagination-buttons {
+        justify-content: center !important;
+        gap: 0.5rem !important;
+    }
+
+    .anygrid-container .pagination-button {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        font-size: 0.875rem !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .anygrid-container .pagination-info {
+        text-align: center !important;
+    }
 }
 
-.anygrid-table tbody tr {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}`;
+/* ==================================================== */
+/* VERY SMALL SCREENS (480px and below)                 */
+/* ==================================================== */
 
+@media (max-width: 480px) {
+    .anygrid-container .anygrid-table tbody tr {
+        padding: 1rem !important;
+        margin-bottom: 0.75rem !important;
+        gap: 0.5rem !important;
+    }
 
+    .anygrid-container .anygrid-table td {
+        padding-bottom: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
 
+    .anygrid-container .anygrid-table td > * {
+        font-size: 0.875rem !important;
+    }
+
+    /* Stack buttons horizontally when in same cell */
+    .anygrid-container .anygrid-table td .edit + .delete {
+        margin-left: 0.5rem !important;
+        margin-top: 0 !important;
+    }
+
+    /* Adjust container padding */
+    .anygrid-container {
+        padding: 0.5rem !important;
+    }
+
+    /* Adjust pagination buttons */
+    .anygrid-container .pagination-button {
+        width: 2.25rem !important;
+        height: 2.25rem !important;
+        font-size: 0.8125rem !important;
+    }
+}
+
+/* ==================================================== */
+/* MEDIA QUERIES FOR DIFFERENT DESKTOP SIZES            */
+/* ==================================================== */
+
+/* Small desktop/laptop */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .anygrid-container {
+        max-width: 98%;
+    }
+
+    .anygrid-container .anygrid-table th,
+    .anygrid-container .anygrid-table td {
+        min-width: 100px;
+        max-width: 180px;
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+/* Large desktop */
+@media (min-width: 1025px) {
+    .anygrid-container {
+        max-width: 90%;
+    }
+
+    .anygrid-container .anygrid-table th,
+    .anygrid-container .anygrid-table td {
+        min-width: 140px;
+        max-width: 220px;
+    }
+}
+
+/* Very large desktop */
+@media (min-width: 1440px) {
+    .anygrid-container {
+        max-width: 85%;
+    }
+
+    .anygrid-container .anygrid-table th,
+    .anygrid-container .anygrid-table td {
+        min-width: 150px;
+        max-width: 250px;
+    }
+}
+
+`;
 
 
 class AnyGrid {

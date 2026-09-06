@@ -1,0 +1,78 @@
+
+
+js
+
+html
+basic css 
+
+
+behaivior 
+1. On cell edit - click on a component e.g.
+
+<h1> Personal Details </h1> 
+<p> <span> John </span> <span> Doe </span> </p>
+
+<h1> Age </h1> 
+<p> <span> 43 </span> </p>
+
+
+<h1> Preferences </h1> 
+<ul>
+<li> Playing </li>
+<li> Eating </li>
+<li> walking </li>
+
+</ul>
+
+
+<h2> Contacts </h2> 
+<ul>
+<li> Mobile: <span> 34638383999 </span>  </li>
+<li> Email: <span> her@example.com </span>  </li>
+<li> Address: <span> 35 Living world, Jadg, RSA </span>  </li>
+
+</ul>
+
+<h1> Sign Up Date and Time </h1> 
+<p> <span> 23/08/2026 13:00 </span> </p>
+
+
+
+
+
+Types
+Int
+String
+etc (all standard)
+
+Anygrid has metaData and infrastructure ofr type aware editor UIs - challenge is not all data will rendred via anygrid
+
+
+there is need for mechanism ( light weight module) - class anme driven - where elements with a certain class name can have the editable behaviors 
+
+The behavior should simply be: 
+
+1. 
+When the element is clicked e.g. <p> <span> 43 </span> </p> then it becomes a correct input type for that data e.g. <input type="number" value="43" /> 
+
+2. The data is saveable (updatable) at cell or component/element level either by clicking or presssign enter on the key board
+
+3. Status message must show on the right side of the component (e.g. Saved with a check mark)
+
+4. The tricky part is dealing with lists data or json and array objects - determining the right editor can be trickly here but for basic lists we can start with comma sepearte values (basic) -- then we do an editor for key value pairs (where keys are predefined)
+
+later on we can add repeators for custom keys and values
+
+
+5. So the core principle is that metadata components must be editable and deletable at cell/element  level -  
+
+
+6. the clean UIs' for this is having a pencil icon and delete icon next to each other on the right side of the component ( when pencil icon is clicked the cell becomes editable - this behavior exists already we- just need to wire it to the pencil icon)- for delete (trash icon)- the behavior does nto exist at cell level - also there has to be confrimation step - and the actual api calls stay the same - anygrid handled via dataApiEndpoint
+
+I want us to do a prisma postgres model (just dummy) e.g. product or any single model that will have the different data types across its fields so that we use that test the rendering of all editors - cell level editing and cell level deleting - we start with anygrid context whoch alomost done - then we can go to cases where metadata driven smQL or even raw fetches run to the semantqQL backend - displayed outside the grid also remains editable (the editability and deletable outside core data grid must configurable (on or off switch in anygrid features))
+
+
+
+
+
+
